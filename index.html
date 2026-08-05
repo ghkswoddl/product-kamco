@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>온기업(OnCorp) 펀드 특수창구 FO 화면설계서 - SFR-온기업-021~032 × SFR-펀드관리-001~044</title>
+<title>온기업(OnCorp) 화면설계서 - SFR-온기업-002~032</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
@@ -16,7 +16,7 @@
 </head>
 <body class="bg-gray-100">
 <div class="flex min-h-screen">
-  <div id="sidebar" class="w-72 bg-white border-r border-gray-200 overflow-y-auto sticky top-0 h-screen"></div>
+  <div id="sidebar" class="w-64 bg-white border-r border-gray-200 overflow-y-auto sticky top-0 h-screen"></div>
   <div class="flex-1 flex flex-col">
     <div id="pathbar" class="px-6 pt-3 text-[11px] text-gray-400"></div>
     <div id="content" class="flex-1 p-6"></div>
@@ -24,30 +24,45 @@
 </div>
 
 <script>
-/* ================================================================
-   온기업(OnCorp) 펀드 특수창구 FO 전용 화면설계서
-   대상: SFR-온기업-021~032 (자문기관 / 펀드 운용사 GP / 수탁기관)
-   근거: SFR-펀드관리-001~044 (BO) RFP 원문 전수 대조, 필드 단위 매핑
-   ================================================================ */
+/* ================= 공통 설정 ================= */
 const NAVY = "#005088";
 const NAVY_DARK = "#003a63";
 const ic = (name, cls) => `<i data-lucide="${name}" class="${cls || 'w-4 h-4'}"></i>`;
 
 /* ================= 화면 메타 ================= */
 const SCREENS = [
-  { id:"000", group:"개요", name:"FO × BO 종합 매핑 대시보드", screenId:"OVERVIEW" },
-  { id:"021", group:"자문기관", name:"의뢰관리", screenId:"ONC-SCR-021" },
-  { id:"022", group:"펀드 운용사(GP)", name:"일반 (명세관리)", screenId:"ONC-SCR-022" },
-  { id:"023", group:"펀드 운용사(GP)", name:"투자심사 보고", screenId:"ONC-SCR-023" },
-  { id:"024", group:"펀드 운용사(GP)", name:"총회/이사회 보고", screenId:"ONC-SCR-024" },
-  { id:"025", group:"펀드 운용사(GP)", name:"보고사항 보고", screenId:"ONC-SCR-025" },
-  { id:"026", group:"펀드 운용사(GP)", name:"공문 보고", screenId:"ONC-SCR-026" },
-  { id:"027", group:"펀드 운용사(GP)", name:"출자금 납입요청 등", screenId:"ONC-SCR-027" },
-  { id:"028", group:"펀드 운용사(GP)", name:"투자실적 검증 등 보고", screenId:"ONC-SCR-028" },
-  { id:"029", group:"펀드 운용사(GP)", name:"선박펀드 기타보고", screenId:"ONC-SCR-029" },
-  { id:"030", group:"펀드 운용사(GP)", name:"온라인 출자사업 신청", screenId:"ONC-SCR-030" },
-  { id:"031", group:"수탁기관", name:"운용지시서 관리", screenId:"ONC-SCR-031" },
-  { id:"032", group:"수탁기관", name:"정보대사 관리 등", screenId:"ONC-SCR-032" },
+  { id:"002", group:"일반 회원", name:"회원가입", screenId:"ONC-SCR-002" },
+  { id:"003", group:"일반 회원", name:"로그인 / 로그아웃", screenId:"ONC-SCR-003" },
+  { id:"004", group:"일반 회원", name:"게시판 (공지/Q&A/자료실)", screenId:"ONC-SCR-004" },
+  { id:"005", group:"일반 회원", name:"사업 안내", screenId:"ONC-SCR-005" },
+  { id:"006", group:"일반 회원", name:"맞춤형 사업 추천", screenId:"ONC-SCR-006" },
+  { id:"007", group:"일반 회원", name:"챗봇 서비스", screenId:"ONC-SCR-007" },
+  { id:"007-1", group:"관리자", name:"챗봇 관리자", screenId:"ONC-SCR-007-1" },
+  { id:"008", group:"투자자 매칭", name:"투자자 매칭 지원", screenId:"ONC-SCR-008" },
+  { id:"009", group:"일반 회원", name:"상담 신청", screenId:"ONC-SCR-009" },
+  { id:"010", group:"일반 회원", name:"자가진단", screenId:"ONC-SCR-010" },
+  { id:"011", group:"일반 회원", name:"사업 신청", screenId:"ONC-SCR-011" },
+  { id:"012", group:"일반 회원", name:"My Page", screenId:"ONC-SCR-012" },
+  { id:"013", group:"관리자", name:"게시판 관리", screenId:"ONC-SCR-013" },
+  { id:"014", group:"관리자", name:"시스템 관리", screenId:"ONC-SCR-014" },
+  { id:"015", group:"관리자", name:"상담예약 관리", screenId:"ONC-SCR-015" },
+  { id:"016", group:"관리자", name:"회원 관리", screenId:"ONC-SCR-016" },
+  { id:"017", group:"관리자", name:"기업상담 관리", screenId:"ONC-SCR-017" },
+  { id:"018", group:"관리자", name:"기업신청 관리", screenId:"ONC-SCR-018" },
+  { id:"019", group:"관리자", name:"보고서 관리", screenId:"ONC-SCR-019" },
+  { id:"020", group:"관리자", name:"기타 관리 (동산금융/KODATA/부실징후)", screenId:"ONC-SCR-020" },
+  { id:"021", group:"특수창구 · 자문기관", name:"자문기관 - 의뢰관리", screenId:"ONC-SCR-021" },
+  { id:"022", group:"특수창구 · 펀드운용사", name:"펀드 운용사 일반 (명세관리)", screenId:"ONC-SCR-022" },
+  { id:"023", group:"특수창구 · 펀드운용사", name:"펀드 운용사 - 투자심사 보고", screenId:"ONC-SCR-023" },
+  { id:"024", group:"특수창구 · 펀드운용사", name:"펀드 운용사 - 총회/이사회 보고", screenId:"ONC-SCR-024" },
+  { id:"025", group:"특수창구 · 펀드운용사", name:"펀드 운용사 - 보고사항 보고", screenId:"ONC-SCR-025" },
+  { id:"026", group:"특수창구 · 펀드운용사", name:"펀드 운용사 - 공문 보고", screenId:"ONC-SCR-026" },
+  { id:"027", group:"특수창구 · 펀드운용사", name:"펀드 운용사 - 출자금 납입요청", screenId:"ONC-SCR-027" },
+  { id:"028", group:"특수창구 · 펀드운용사", name:"펀드 운용사 - 투자실적 검증보고", screenId:"ONC-SCR-028" },
+  { id:"029", group:"특수창구 · 펀드운용사", name:"펀드 운용사 - 선박펀드 기타보고", screenId:"ONC-SCR-029" },
+  { id:"030", group:"특수창구 · 펀드운용사", name:"펀드 운용사 - 온라인 출자사업 신청", screenId:"ONC-SCR-030" },
+  { id:"031", group:"특수창구 · 수탁기관", name:"수탁기관 - 운용지시서 관리", screenId:"ONC-SCR-031" },
+  { id:"032", group:"특수창구 · 수탁기관", name:"수탁기관 - 정보대사 관리", screenId:"ONC-SCR-032" },
 ];
 
 /* ================= 아톰 헬퍼 ================= */
@@ -62,7 +77,7 @@ function statusPill(label, tone) {
   return `<span class="text-[11px] px-2 py-0.5 rounded-full font-medium ${map[tone]}">${label}</span>`;
 }
 function scrHeader(sfr, name, screenId, note) {
-  return `<div class="mb-4">
+  return `<div class="mb-5">
     <div class="flex items-center gap-2 mb-1">${badge(sfr,"blue")}${badge(screenId,"gray")}</div>
     <h1 class="text-lg font-medium text-gray-900">${name}</h1>
     ${note ? `<p class="text-xs text-gray-500 mt-1">${note}</p>` : ""}
@@ -75,12 +90,6 @@ function card(iconName, title, body, tag) {
       <h2 class="text-[15px] font-medium text-gray-900">${title}</h2>
       ${tag ? `<span class="ml-auto">${tag}</span>` : ""}
     </div>
-    ${body}
-  </div>`;
-}
-function subCard(iconName, title, body) {
-  return `<div class="border border-gray-200 rounded-lg p-4 bg-gray-50/60">
-    <div class="flex items-center gap-1.5 mb-2.5">${iconName ? ic(iconName,"w-[14px] h-[14px] text-gray-400") : ""}<h3 class="text-[12.5px] font-semibold text-gray-700">${title}</h3></div>
     ${body}
   </div>`;
 }
@@ -110,21 +119,24 @@ function btn(label, opts) {
   </button>`;
 }
 function table(cols, rows, navFn) {
-  return `<div class="border border-gray-200 rounded-lg overflow-hidden overflow-x-auto">
+  return `<div class="border border-gray-200 rounded-lg overflow-hidden">
     <table class="w-full text-[12px]">
-      <thead><tr class="bg-gray-50 text-gray-500">${cols.map(c=>`<th class="text-left font-medium px-3 py-2 border-b border-gray-200 whitespace-nowrap">${c}</th>`).join("")}</tr></thead>
+      <thead><tr class="bg-gray-50 text-gray-500">${cols.map(c=>`<th class="text-left font-medium px-3 py-2 border-b border-gray-200">${c}</th>`).join("")}</tr></thead>
       <tbody>${rows.map((r,i)=>{
         const nav = navFn ? navFn(i) : null;
-        return `<tr ${nav ? `data-nav="${nav}" class="border-b border-gray-100 last:border-0 cursor-pointer hover:bg-blue-50/60"` : `class="border-b border-gray-100 last:border-0"`}>${r.map(c=>`<td class="px-3 py-2 text-gray-700 whitespace-nowrap">${c}</td>`).join("")}</tr>`;
+        return `<tr ${nav ? `data-nav="${nav}" class="border-b border-gray-100 last:border-0 cursor-pointer hover:bg-blue-50/60"` : `class="border-b border-gray-100 last:border-0"`}>${r.map(c=>`<td class="px-3 py-2 text-gray-700">${c}</td>`).join("")}</tr>`;
       }).join("")}</tbody>
     </table>
   </div>`;
+}
+function tabs(items, active) {
+  return `<div class="flex gap-1 mb-4 border-b border-gray-200">${items.map(t=>`<div class="px-3 py-2 text-[13px] font-medium border-b-2 ${t===active?'border-[#005088] text-[#005088]':'border-transparent text-gray-500'}">${t}</div>`).join("")}</div>`;
 }
 function checklist(items) {
   return `<div class="space-y-2">${items.map((it,i)=>`<label class="flex items-center gap-2 text-[13px] text-gray-700"><input type="checkbox" ${i%2===0?"checked":""} class="rounded border-gray-300"/>${it}</label>`).join("")}</div>`;
 }
 function ipNotice() {
-  return `<div class="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 text-[12px] text-amber-800 mb-4">${ic("shield-check","w-[14px] h-[14px]")}지정된 IP에서만 접속 가능한 특수고객 창구입니다 (SFR-온기업-002 인증 정책 · 외부 이해관계자-내부 업무시스템 실시간 연계)</div>`;
+  return `<div class="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 text-[12px] text-amber-800 mb-4">${ic("shield-check","w-[14px] h-[14px]")}지정된 IP에서만 접속 가능한 특수고객 창구입니다 (SFR-온기업-002 인증 정책)</div>`;
 }
 function backBar(to, label) {
   return `<button type="button" data-nav="${to}" class="flex items-center gap-1.5 text-[12px] font-medium text-gray-500 hover:text-[#005088] mb-4">${ic("arrow-left","w-[14px] h-[14px]")}${label} 목록으로</button>`;
@@ -164,10 +176,15 @@ function shell(gnbTitle, body, gnbSub) {
   return `<div class="bg-[#F5F7FA] rounded-xl overflow-hidden border border-gray-200">${gnb(gnbTitle, gnbSub)}<div class="p-7">${body}</div></div>`;
 }
 
-/* ================= FO-BO 필드 단위 연계(ICD) 표시 헬퍼 ================= */
+/* ================= FO-BO 필드 단위 연계(ICD) 표시 헬퍼 =================
+   SFR-온기업-021~032(FO) ↔ SFR-펀드관리-001~044(BO) 1:1 매핑 결과 반영용
+   boLink   : 화면 상단, 이 화면이 근거로 삼는 BO 요건번호 칩 스트립
+   fBadge   : 필드 라벨 옆 상태 배지(신규/자동계산/확인필요)
+   gapBox   : 화면 하단, BO 요건 대비 격차·확인필요 사항 안내 박스
+================================================================= */
 function boLink(codes, note) {
   const chips = codes.map(c => {
-    const gap = /확인필요/.test(c);
+    const gap = /확인필요|개념/.test(c);
     return `<span class="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full border ${gap ? 'bg-amber-50 border-amber-200 text-amber-800' : ''}"
       ${gap ? '' : `style="color:${NAVY_DARK};background:#E6EDFA;border-color:#C9D9F5"`}>
       ${ic(gap ? "alert-triangle" : "link-2", "w-3 h-3")}${c}
@@ -180,118 +197,800 @@ function boLink(codes, note) {
 }
 function fBadge(kind) {
   const map = {
-    new:  ["신규", "bg-green-50 text-green-700"],
-    calc: ["자동계산", "bg-amber-50 text-amber-700"],
-    gap:  ["확인필요", "bg-red-50 text-red-700"],
-    ext:  ["BO확장", "bg-indigo-50 text-indigo-700"],
+    new:   ["신규", "bg-green-50 text-green-700"],
+    calc:  ["자동계산", "bg-amber-50 text-amber-700"],
+    gap:   ["확인필요", "bg-red-50 text-red-700"],
   };
   const [label, cls] = map[kind] || map.new;
   return `<span class="text-[9.5px] font-bold px-1.5 py-0.5 rounded ${cls} align-middle ml-1.5">${label}</span>`;
 }
-function boChip(code){
-  return `<span class="text-[10px] font-mono font-semibold text-gray-400 ml-1.5 align-middle">[${code}]</span>`;
-}
-function gapBox(html, title) {
-  return `<div class="mt-4 p-3.5 rounded-lg bg-red-50 border border-red-200 text-[11.5px] text-red-800 leading-relaxed flex gap-2">
-    ${ic("alert-triangle", "w-[14px] h-[14px] flex-shrink-0 mt-0.5")}<div><b>${title||"확인 필요"}</b> — ${html}</div>
+function gapBox(html) {
+  return `<div class="mt-4 p-3 rounded-lg bg-red-50 border border-red-200 text-[11.5px] text-red-800 leading-relaxed flex gap-2">
+    ${ic("alert-triangle", "w-[14px] h-[14px] flex-shrink-0 mt-0.5")}<div>${html}</div>
   </div>`;
 }
-function fieldMapTable(rows) {
-  // rows: [FO필드, BO필드/기능, BO출처, 비고]
-  return `<div class="border border-gray-200 rounded-lg overflow-hidden overflow-x-auto">
-    <table class="w-full text-[11.5px]">
-      <thead><tr style="background:${NAVY_DARK}" class="text-white">
-        <th class="text-left font-semibold px-3 py-2 w-[20%]">FO 필드</th>
-        <th class="text-left font-semibold px-3 py-2 w-[34%]">대응 BO 필드/기능</th>
-        <th class="text-left font-semibold px-3 py-2 w-[13%]">BO 출처</th>
-        <th class="text-left font-semibold px-3 py-2 w-[33%]">비고</th>
-      </tr></thead>
-      <tbody>${rows.map((r,i)=>`<tr class="${i%2? 'bg-gray-50/60':''} border-b border-gray-100 last:border-0 align-top">
-        <td class="px-3 py-2.5 font-semibold text-gray-800">${r[0]}</td>
-        <td class="px-3 py-2.5 text-gray-700">${r[1]}</td>
-        <td class="px-3 py-2.5 font-mono font-semibold" style="color:${NAVY_DARK}">${r[2]}</td>
-        <td class="px-3 py-2.5 text-gray-500">${r[3]}</td>
-      </tr>`).join("")}</tbody>
-    </table>
-  </div>`;
+
+/* ================= 재사용 보고이력→상세 템플릿 (특수창구 023~029,031) ================= */
+function reportHistory(data, screenId, cols) {
+  return card("clock", "최근 보고 이력 (클릭 시 상세 조회)",
+    table(cols, data.map(d=>d.row), (i)=>`/${screenId}/${data[i].id}`)
+  );
 }
-function statCard(num, label){
-  return `<div class="bg-white/10 rounded-lg px-4 py-3"><p class="text-xl font-extrabold text-white">${num}</p><p class="text-[11px] text-blue-100 mt-0.5">${label}</p></div>`;
+function reportDetail(item, screenId, sfr, screenLabel, listName) {
+  return `${backBar('/'+screenId, listName)}
+  ${scrHeader(sfr, screenLabel + ' 상세', 'ONC-SCR-' + screenId, item.title)}
+  ${card("file-text","보고 기본정보", infoGrid(item.info))}
+  ${card("refresh-cw","진행상태", timeline(["작성","전송","공사 접수","확정"], item.stage))}
+  ${item.content ? card("clipboard-list","보고 내용", `<p class="text-[13px] text-gray-700 leading-relaxed">${item.content}</p>`) : ""}
+  ${card("paperclip","첨부파일", `<div class="flex items-center justify-between border rounded-lg p-3 text-[12px]">
+      <div class="flex items-center gap-2">${ic("file-text","w-[14px] h-[14px]")}${item.file || "보고서_첨부.pdf"}</div>
+      ${btn("다운로드", {small:true, icon:"download"})}
+    </div>`)}
+  <div class="flex justify-end gap-2">${btn("수정",{})}${btn("재전송",{primary:true, icon:"send"})}</div>`;
 }
 
 /* ================= 데이터 ================= */
+const NOTICES = [
+  { id:"n1", title:"2026년 기업지원 프로그램 안내", date:"2026-06-10", views:"1,204", writer:"운영자", body:"2026년 하반기 기업자산 유동화인수, 동산담보회수지원 등 주요 기업지원 프로그램의 접수 일정과 지원 규모를 안내드립니다. 자세한 신청요건은 사업 안내 메뉴를 참고하시기 바랍니다.", file:"2026년_기업지원프로그램_안내.pdf" },
+  { id:"n2", title:"홈페이지 개편 안내", date:"2026-06-05", views:"530", writer:"운영자", body:"온기업(OnCorp) 홈페이지가 이용자 편의성 강화를 위해 개편되었습니다. My Page 통합, 챗봇 상담 기능이 신규 추가되었습니다.", file:"홈페이지_개편_안내.pdf" },
+  { id:"n3", title:"여름철 시스템 점검 안내", date:"2026-05-28", views:"412", writer:"운영자", body:"시스템 안정화를 위해 정기 점검이 진행됩니다. 점검 시간 동안 서비스 이용이 제한될 수 있습니다.", file:"정기점검_안내.pdf" },
+];
+/* SFR-온기업-005 원문: 기업지원펀드, 기업구조혁신펀드, 자산매입후재임대, 기업자산유동화인수,
+   사업재편기업지원, 동산담보회수지원, 담보부사채발행지원, 회생·부실징후기업 자금대여, 선박펀드, 투자자매칭지원 (10종) */
+const PROGRAMS = [
+  { id:"p1", type:"금융지원", name:"기업지원펀드", summary:"성장자금 대여", target:"중견·중소기업", limit:"최대 100억원", method:"온라인 신청(온기업) + 자가진단 필수", officer:"금융지원1팀 이담당 (02-1234-5601)", docs:["사업계획서","최근 3개년 재무제표","법인등기부등본","자금사용계획서"] },
+  { id:"p2", type:"금융지원", name:"동산담보회수지원", summary:"동산 담보 회수", target:"회생·구조조정 기업", limit:"감정평가액의 70% 이내", method:"온라인 신청 + 자문기관 감정평가 연계", officer:"동산금융팀 박담당 (02-1234-5602)", docs:["동산목록","감정평가의뢰서","담보설정계약서"] },
+  { id:"p3", type:"자산활용", name:"자산매입후재임대(S&LB)", summary:"자산 매각 후 재임대", target:"유동성 필요 기업", limit:"자산가치의 최대 90%", method:"상담 신청 → 자가진단 → 온라인 신청", officer:"자산활용팀 최담당 (02-1234-5603)", docs:["부동산등기부등본","감정평가서","임대차 조건 제안서"] },
+  { id:"p4", type:"구조조정", name:"회생·부실징후기업 자금대여", summary:"긴급 운영자금", target:"부실징후 기업", limit:"최대 50억원", method:"온라인 신청 + K-Score 심사 연계", officer:"구조조정팀 정담당 (02-1234-5604)", docs:["회생계획인가서","운영자금 소요계획서"] },
+  { id:"p5", type:"구조조정", name:"기업구조혁신펀드", summary:"구조혁신 M&A·세컨더리 투자", target:"사업재편·M&A 수요기업", limit:"펀드 결성 규모 내 개별 심사", method:"온라인 출자사업 신청(특수창구) 또는 온라인 신청", officer:"구조혁신팀 한담당 (02-1234-5605)", docs:["사업재편계획서","M&A 추진현황자료"] },
+  { id:"p6", type:"자산활용", name:"기업자산 유동화인수", summary:"기업보유자산 매입 후 유동화", target:"유동성 필요 중견·중소기업", limit:"자산평가액 기준 개별 산정", method:"자가진단 → 온라인 신청 → 서류 제출", officer:"자산유동화팀 이담당 (02-1234-5606)", docs:["사업계획서","재무제표","법인등기부등본","자금사용계획서"] },
+  { id:"p7", type:"구조조정", name:"사업재편기업지원", summary:"선제적 사업재편 자금·컨설팅", target:"사업재편계획 승인기업", limit:"재편계획 규모별 상이", method:"온라인 신청 + 자문기관 컨설팅 연계", officer:"사업재편팀 김담당 (02-1234-5607)", docs:["사업재편계획 승인서","이행계획서"] },
+  { id:"p8", type:"금융지원", name:"담보부사채 발행지원", summary:"담보부사채(P-CBO 등) 발행 지원", target:"직접금융 조달 필요기업", limit:"발행규모 내 신용보강", method:"온라인 신청 + 신용평가 연계", officer:"금융지원2팀 오담당 (02-1234-5608)", docs:["발행계획서","신용평가보고서"] },
+  { id:"p9", type:"특수펀드", name:"선박펀드", summary:"선박 신조·인수 금융 지원", target:"해운업·선주사", limit:"선가 기준 개별 심사", method:"펀드 운용사(특수창구) 경유 신청", officer:"선박금융팀 강담당 (02-1234-5609)", docs:["선박매매계약서","용선계약서","선가감정서"] },
+  { id:"p10", type:"투자연계", name:"투자자매칭 지원", summary:"투자자-기업 매칭 및 IR 연계", target:"투자유치 희망기업", limit:"-", method:"온기업 투자자매칭 메뉴 이용", officer:"투자유치팀 서담당 (02-1234-5610)", docs:["IR자료","사업계획서"], navOverride:"/008" },
+];
+
+/* SFR-온기업-005 하단: 유관기관 기업지원프로그램(중진공/신보/기보/벤처투자 등), 기관 홈페이지 링크 연동 */
+const AFFILIATE_PROGRAMS = [
+  { id:"g1", org:"중소벤처기업진흥공단(중진공)", type:"정책자금", name:"성장촉진자금 융자", summary:"중소기업 성장단계별 정책자금 융자", target:"중소기업", method:"중진공 홈페이지 온라인 신청", officer:"중진공 정책자금처 (1357)", link:"https://www.kosmes.or.kr", docs:["사업자등록증","재무제표","자금신청서(중진공 양식)"] },
+  { id:"g2", org:"신용보증기금(신보)", type:"보증지원", name:"매출채권보험·신용보증", summary:"신용도 기반 대출·보증 연계 지원", target:"신용도 우수 중소기업", method:"신보 영업점 방문 또는 온라인 예비검토 신청", officer:"신용보증기금 고객센터 (1588-6565)", link:"https://www.kodit.co.kr", docs:["사업자등록증","재무제표","보증신청서(신보 양식)"] },
+  { id:"g3", org:"기술보증기금(기보)", type:"기술보증", name:"기술평가 기반 보증지원", summary:"기술력 평가 기반 자금보증", target:"기술혁신형 중소기업(이노비즈 등)", method:"기보 온라인 청구 시스템 신청", officer:"기술보증기금 고객센터 (1544-1120)", link:"https://www.kibo.or.kr", docs:["사업자등록증","기술관련 인증서","보증신청서(기보 양식)"] },
+  { id:"g4", org:"한국벤처투자(모태펀드)", type:"벤처투자", name:"모태펀드 출자 연계 투자", summary:"모태펀드 출자 자펀드를 통한 벤처투자 연계", target:"벤처·스타트업", method:"한국벤처투자 홈페이지 내 투자매칭 신청", officer:"한국벤처투자 고객지원팀 (02-2156-2000)", link:"https://www.kvic.or.kr", docs:["IR자료","사업계획서","법인등기부등본"] },
+];
+/* ===== SFR-온기업-008 [투자자 매칭 지원] 데이터 - RFP 4개 하위기능 전체 반영 =====
+   1) 투자자 검색(기업이 검색) 2) 투자희망기업 검색(투자자가 검색)
+   3) 투자자 매칭 신청(기업이 신청) 4) 투자자 라운지(투자자가 활용) */
+const INVESTORS = [
+  { id:"i1", name:"A자산운용", est:"2015", sector:"제조업", size:"500억", type:"VC", contact:"02-555-1000 / ir@a-am.co.kr", funds:"A자산운용 1호 그로스펀드(300억) · 2호 세컨더리펀드(200억)", detail:"제조업 중견기업 대상 성장자금 투자 전문. 최근 3년간 12건 투자 집행." },
+  { id:"i2", name:"B파트너스", est:"2018", sector:"IT서비스", size:"1,200억", type:"PE", contact:"02-555-2000 / ir@bpartners.co.kr", funds:"B파트너스 바이아웃펀드(800억) · 세컨더리펀드(400억)", detail:"IT/플랫폼 기업 바이아웃 및 세컨더리 투자 전문." },
+];
+/* 투자매칭신청·정보공개동의를 완료한 기업만 투자자에게 노출되는 목록 (RFP 명시 조건) */
+const WANTED_COMPANIES = [
+  { id:"co1", name:"(주)그린테크", industry:"친환경 소재", founded:"2019", amount:"30억원", intro:"폐배터리 재활용 소재 기술 보유. 2026년 매출 120억 목표.", core:"배터리 재활용 소재 제조", product:"리사이클 양극재", finance:"2025년 매출 82억 / 영업이익 6억" },
+  { id:"co2", name:"(주)헬스브릿지", industry:"디지털 헬스케어", founded:"2021", amount:"15억원", intro:"만성질환 관리 플랫폼 운영. MAU 12만명.", core:"만성질환 원격모니터링 SaaS", product:"헬스브릿지 앱 · 웹 플랫폼", finance:"2025년 매출 21억 / 영업손실 -3억(투자유치 후 흑자전환 계획)" },
+];
+/* 투자자 라운지: 신청현황(기업정보공개현황·검토현황·검토결과) */
+const MATCH_APPS = [
+  { id:"ln1", company:"(주)그린테크", date:"2026-06-01", disclose:"공개완료", review:"검토중", result:"-", docs:["재무제표.pdf","기업IR자료.pdf","홍보자료.pdf"], note:"배터리 재활용 소재 기술의 정부 R&D 실적 및 특허 보유 현황 확인 중." },
+  { id:"ln2", company:"(주)헬스브릿지", date:"2026-05-20", disclose:"공개완료", review:"검토완료", result:"매칭성사", docs:["재무제표.pdf","기업IR자료.pdf"], note:"MAU 성장세 및 재구매율 지표 우수. 투자 조건 협의 완료." },
+];
+/* 투자자 라운지: 기업이 보낸 쪽지 확인·답변 */
+const LOUNGE_MESSAGES = [
+  { id:"ms1", company:"(주)그린테크", date:"2026-06-10", content:"저희 기업 IR자료를 열람해 주실 수 있을까요? 추가로 궁금하신 점 있으시면 답변드리겠습니다.", status:"미답변", tone:"amber" },
+];
+/* 투자자 라운지: 열람 요청한 IR 자료 조회 */
+const LOUNGE_IR_REQUESTS = [
+  { id:"ir1", company:"(주)헬스브릿지", date:"2026-06-08", status:"승인대기", tone:"amber" },
+  { id:"ir2", company:"(주)그린테크", date:"2026-06-02", status:"열람승인", tone:"green" },
+];
+/* 투자자 라운지: 투자매칭 성사된 투자계약 등록 및 전송 */
+const LOUNGE_CONTRACTS = [
+  { id:"ct1", company:"(주)헬스브릿지", date:"2026-06-15", amount:"1,500,000,000원", method:"전환우선주(RCPS)", status:"등록완료", tone:"green" },
+];
+/* 투자자 라운지: 투자자 게시판 */
+const LOUNGE_BOARD = [
+  { id:"bd1", title:"2026년 상반기 구조조정 시장 투자 트렌드 공유", date:"2026-06-12", views:120, body:"최근 사업재편·세컨더리 투자 수요가 증가하고 있으며, 특히 제조업 유동화 자산에 대한 관심이 높아지고 있습니다." },
+];
+
+const CONSULT_HISTORY = [
+  { id:"c1", date:"2026-06-01", mode:"방문", topic:"S&LB", status:"승인", note:"○○공장 부지 매입후 재임대 관련 사전 상담. 담당자 배정 완료.", officer:"박담당" },
+  { id:"c2", date:"2026-05-20", mode:"영상", topic:"DIP금융", status:"완료", note:"회생절차 진행중 운영자금 조달 방안 상담 완료.", officer:"이담당" },
+];
+const MY_APPLICATIONS = [
+  { id:"a1", name:"기업자산 유동화인수", date:"2026-06-10", stage:2, stageLabel:"외부평가", officer:"이담당" },
+  { id:"a2", name:"동산담보회수지원", date:"2026-05-15", stage:4, stageLabel:"계약체결", officer:"박담당" },
+];
+const MY_CONTRACTS = [
+  { id:"k1", program:"기업자산 유동화인수", round:"1/4", amount:"50,000,000원", date:"2026-07-01", status:"납부완료", tone:"green" },
+  { id:"k2", program:"기업자산 유동화인수", round:"2/4", amount:"50,000,000원", date:"2026-10-01", status:"예정", tone:"gray" },
+];
+const QA_ADMIN = [
+  { id:"qa1", title:"신청서류 문의드립니다", writer:"(주)ABC", status:"대기", officer:"-", question:"제출서류 중 재무제표는 최근 몇 개년까지 필요한가요?" },
+  { id:"qa2", title:"진행상태 확인 요청", writer:"(주)XYZ", status:"완료", officer:"이담당", question:"신청한 건의 현재 심사 단계를 확인하고 싶습니다.", answer:"현재 외부평가 단계 진행중이며, 완료 후 개별 안내드릴 예정입니다." },
+];
+const SYS_LOGS = [
+  { id:"l1", time:"2026-06-16 08:12", type:"예외", content:"파일 업로드 실패", status:"처리완료", tone:"green", detail:"20MB 초과 파일 업로드 시도로 인한 예외 발생. 사용자 안내 메시지 정상 노출 확인." },
+  { id:"l2", time:"2026-06-16 09:03", type:"접속", content:"접속자수 1,204", status:"정상", tone:"gray", detail:"일일 피크 접속자 통계. 특이 트래픽 없음." },
+];
+const RESERVATIONS = [
+  { id:"r1", company:"(주)ABC", mode:"방문", date:"2026-06-20 14:00", topic:"S&LB", status:"승인대기", memo:"○○공장 부지 매각후 재임대 관련 초기 상담 희망" },
+];
+const MEMBERS = [
+  { id:"m1", type:"펀드운용사", name:"캠코선박운용(주)", regno:"110111-2222222", period:"2025~2027", status:"이용중", tone:"green", ceo:"정운용", contact:"02-1234-5678" },
+  { id:"m2", type:"자문기관", name:"○○회계법인", regno:"110111-3333333", period:"2026~2026", status:"승인대기", tone:"amber", ceo:"최대표", contact:"02-2222-3333" },
+];
+const CORP_CUSTOMERS = [
+  { id:"cc1", name:"(주)ABC", consults:"4", applications:"2", lastContact:"2026-06-14", history:["2026-06-14 유선상담 - 자금조달 문의","2026-05-02 방문상담 - S&LB 사전상담"] },
+];
+const ADMIN_APPLICATIONS = [
+  { id:"aa1", company:"(주)ABC", program:"기업자산 유동화인수", date:"2026-06-10", status:"사전검토", tone:"blue", officer:"이담당", stage:1, docs:["사업계획서.hwp","재무제표.pdf","법인등기부등본.pdf"] },
+  { id:"aa2", company:"(주)XYZ", program:"동산담보회수지원", date:"2026-06-12", status:"접수", tone:"gray", officer:"미배정", stage:0, docs:["동산목록.xlsx"] },
+];
+const KODATA_LIST = [
+  { id:"kd1", name:"(주)회생1", court:"서울회생법원", stage:"회생계획인가", score:"부실", tone:"red", detail:"회생계획 인가 후 변제계획 이행 중. K-Score 최근 재평가 결과 부실 등급 유지." },
+];
+const DISTRESS_LIST = [
+  { id:"ds1", name:"(주)ABC", year:"2026", verdict:"판정유보", tone:"amber", detail:"재무건전성 지표 일부 기준 미달로 추가 자료 요청 후 재판정 예정." },
+];
 const REQUESTS = [
   { id:"rq1", program:"S&LB 자산평가", date:"2026-06-05", officer:"박담당", reqtype:"감정평가", title:"○○공장 감정평가 의뢰", status:"진행중", tone:"blue", content:"○○공장 부지 및 건물에 대한 감정평가를 의뢰드립니다. 평가 기준일은 2026-06-30입니다." },
-  { id:"rq2", program:"DIP금융 자문", date:"2026-05-28", officer:"이담당", reqtype:"법률자문", title:"회생기업 DIP금융 계약서 검토", status:"완료", tone:"green", content:"DIP금융 계약서(안) 법률 검토 완료. 특이 리스크 조항 없음 회신." },
 ];
 const FUND_ITEMS = [
   { id:"f1", name:"펀드 재무제표", date:"2026-06-01", sent:"전송완료", tone1:"blue", confirmed:"확정", tone2:"green", detail:"2026년 1분기 펀드 재무제표 전송 완료 및 공사 확정 처리됨." },
-  { id:"f2", name:"투자포트폴리오 명세", date:"2026-06-03", sent:"전송완료", tone1:"blue", confirmed:"검토중", tone2:"amber", detail:"신규 투자기업 2건 추가 등록, 공사 검토 진행중." },
 ];
-const R023 = [{ id:"r1", row:["2026-06-01","신주 투자","3,000,000,000원","완료"], title:"A기업 신주 투자심사", stage:3, info:[["펀드구분","기업지원펀드"],["투자심사일","2026-06-01"],["투자유형","신주"],["취득주식수","60,000주"],["취득가","50,000원"],["지분율","12.4%"],["투자금액","3,000,000,000원"],["규약준수여부","준수"]], content:"A기업 대상 신주 투자심사 완료. 투자계약서·투심보고서·주주명부·ESG평가보고서 등록 및 전송 처리됨." }];
-const R024 = [{ id:"r1", row:["2026 정기총회","서면결의","2026-05-20","가결"], title:"2026년 정기총회 보고", stage:3, info:[["총회종류","정기총회"],["결의방법","서면결의"],["총회일","2026-05-20"],["의결권행사","전체의결(서면)"]], content:"예산안·결산보고·임원선임 안건 모두 원안 가결. 공사 직인 요청 및 회의록 등록 완료." }];
-const R025 = [{ id:"r1", row:["정기","2026 Q2","출자자 전체","2026-06-30"], title:"2026년 2분기 정기보고", stage:1, info:[["보고구분","정기"],["기준분기","2026 Q2"],["보고대상","출자자 전체"],["제출일","2026-06-30"]], content:"용선사 재무현황 양호, 담보비율 기준 충족. 선박보험 갱신 완료. 해운시황(BDI) 통계 별도 관리." }];
-const R026 = [{ id:"r1", row:["발신","보고","2026-06-08","출자배분 연계","접수"], title:"6월 정기보고 발신 공문", stage:1, info:[["공문종류","발신"],["공문유형","보고"],["공문일자","2026-06-08"],["연계업무","출자배분"],["처리현황","접수"]] }];
-const R028 = [{ id:"r1", row:["2026-06-01","월간","일치","-"], title:"2026년 6월 실물검증", stage:3, info:[["검증일","2026-06-01"],["검증주기","월간"],["일치여부","일치"],["검증대상","자펀드 투자자산·계좌"]], content:"펀드 보유자산 실물검증 결과 장부가와 실사가 일치 확인. 준법감시 체크리스트 이상 없음." }];
-const R029 = [{ id:"r1", row:["선박펀드1호","2027-03-01","조기상환","검토중"], title:"선박펀드1호 조기상환 검토", stage:1, info:[["펀드명","선박펀드1호"],["만기일","2027-03-01"],["상환유형","조기상환"],["해운사 상담연계","2026-05-30 상담이력 有"]], content:"출자자 요청에 따른 조기상환 가능성 검토 중. 법무 자문 결과 대기." }];
-const R031 = [{ id:"r1", row:["기업지원펀드","출자금 집행지시","2026-06-10","1차 출자금 집행","접수"], title:"1차 출자금 집행지시", stage:1, info:[["펀드구분","기업지원펀드"],["운용지시종류","출자금 집행지시"],["운용지시일","2026-06-10"],["관련계좌","수탁 123-456"]], content:"1차 출자금 6,000,000,000원 집행 지시. 수탁기관 계좌 이체 예정." }];
+const R023 = [{ id:"r1", row:["2026-06-01","신주 투자","3,000,000,000원"], title:"A기업 신주 투자심사", stage:2, info:[["펀드구분","기업지원펀드"],["투자심사일","2026-06-01"],["투자유형","신주"],["투자금액","3,000,000,000원"]], content:"A기업 대상 신주 투자심사 완료. 투자계약서 등록 및 전송 처리됨." }];
+const R024 = [{ id:"r1", row:["2026 정기총회","서면결의","2026-05-20"], title:"2026년 정기총회 보고", stage:3, info:[["총회종류","정기총회"],["결의방법","서면결의"],["총회일","2026-05-20"]], content:"예산안·결산보고·임원선임 안건 모두 원안 가결." }];
+const R025 = [{ id:"r1", row:["정기","2026 Q2","2026-06-30"], title:"2026년 2분기 정기보고", stage:1, info:[["보고구분","정기"],["기준분기","2026 Q2"],["제출일","2026-06-30"]], content:"용선사 재무현황 양호, 담보비율 기준 충족. 선박보험 갱신 완료." }];
+const R026 = [{ id:"r1", row:["발신","보고","2026-06-08","접수"], title:"6월 정기보고 발신 공문", stage:1, info:[["공문종류","발신"],["공문유형","보고"],["공문일자","2026-06-08"],["처리현황","접수"]] }];
+const R028 = [{ id:"r1", row:["2026-06-01","월간","일치","-"], title:"2026년 6월 실물검증", stage:3, info:[["검증일","2026-06-01"],["검증주기","월간"],["일치여부","일치"]], content:"펀드 보유자산 실물검증 결과 장부가와 실사가 일치 확인." }];
+const R029 = [{ id:"r1", row:["선박펀드1호","2027-03-01","조기상환","검토중"], title:"선박펀드1호 조기상환 검토", stage:1, info:[["펀드명","선박펀드1호"],["만기일","2027-03-01"],["상환유형","조기상환"]], content:"출자자 요청에 따른 조기상환 가능성 검토 중. 법무 자문 결과 대기." }];
+const R031 = [{ id:"r1", row:["기업지원펀드","출자금 집행지시","2026-06-10","1차 출자금 집행","접수"], title:"1차 출자금 집행지시", stage:1, info:[["펀드구분","기업지원펀드"],["운용지시종류","출자금 집행지시"],["운용지시일","2026-06-10"]], content:"1차 출자금 6,000,000,000원 집행 지시. 수탁기관 계좌 이체 예정." }];
 const ANNOUNCEMENTS = [
-  { id:"a1", name:"2026년 하반기 기업구조혁신펀드", open:"2026-07-01", close:"2026-07-15", review:"2026-07-25", qualify:"펀드운용업 등록 3년 이상, 최소 운용규모 500억원 이상", docs:["제안서","운용사 실적증명서","재무제표"] },
+  { id:"an1", name:"2026년 하반기 기업구조혁신펀드", open:"2026-07-01", close:"2026-07-15", review:"2026-07-25", qualify:"펀드운용업 등록 3년 이상, 최소 운용규모 500억원 이상", docs:["제안서","운용사 실적증명서","재무제표"] },
 ];
 const RECON_ITEMS = [
-  { id:"rc1", label:"계좌 잔고", sysval:"12,540,000,000원", trustval:"12,540,000,000원", match:"일치", tone:"green", cycle:"일간" },
-  { id:"rc2", label:"보유 자산내역", sysval:"선박펀드1호 지분 60%", trustval:"선박펀드1호 지분 60%", match:"일치", tone:"green", cycle:"주간" },
-  { id:"rc3", label:"입출금 내역", sysval:"3건", trustval:"2건", match:"불일치", tone:"red", cycle:"일간", memo:"공사 시스템상 3건 중 1건(2026-06-14 이체)이 수탁기관 원장에 미반영. 확인 요청 발송함." },
+  { id:"rc1", label:"계좌 잔고", sysval:"12,540,000,000원", trustval:"12,540,000,000원", match:"일치", tone:"green" },
+  { id:"rc2", label:"보유 자산내역", sysval:"선박펀드1호 지분 60%", trustval:"선박펀드1호 지분 60%", match:"일치", tone:"green" },
+  { id:"rc3", label:"입출금 내역", sysval:"3건", trustval:"2건", match:"불일치", tone:"red", memo:"공사 시스템상 3건 중 1건(2026-06-14 이체)이 수탁기관 원장에 미반영. 확인 요청 발송함." },
 ];
-const IRR_DATA = [["전체","Gross 18.2% / Net 14.5%","1.32x"],["출자자 A(공사)","Gross 18.2% / Net 14.9%","1.34x"],["출자자 B(민간)","Gross 18.2% / Net 13.8%","1.29x"]];
 
-/* ================================================================
-   화면 렌더러
-   ================================================================ */
+/* ================= 화면 렌더러 ================= */
 const RENDERERS = {};
 
-/* ---------------- 000. 종합 매핑 대시보드 ---------------- */
-RENDERERS["000"] = () => `
-  <div class="rounded-2xl overflow-hidden mb-6" style="background:linear-gradient(120deg,${NAVY_DARK},${NAVY} 75%)">
-    <div class="p-8">
-      <p class="text-[11px] font-bold tracking-wider text-blue-200 uppercase mb-2">Fund Interface Mapping · FO 12 × BO 44</p>
-      <h1 class="text-xl font-extrabold text-white mb-2 leading-relaxed">펀드 특수창구 FO 화면 12종 ↔ 펀드관리 BO 요건 44종<br>필드 단위 1:1 매핑 전용 화면설계서</h1>
-      <p class="text-[12.5px] text-blue-100 max-w-3xl leading-relaxed">SFR-온기업-021~032(자문기관·펀드운용사GP·수탁기관) 각 화면의 입력·조회 필드를 SFR-펀드관리-001~044 원문(RFP 이미지)과 전수 대조하여, FO 화면 설계 시 BO에서 선행 확정되어야 하는 마스터 데이터·자동계산 로직·승인 흐름·격차 항목을 화면별로 표기했습니다.</p>
-      <div class="grid grid-cols-4 gap-3 mt-5 max-w-xl">
-        ${statCard("12","FO 특수창구 화면")}${statCard("44","BO 펀드관리 요건")}${statCard("19","실제 인용된 BO 코드")}${statCard("14","신규/확장 필드 반영")}
+RENDERERS["002"] = () => shell("회원가입", `
+  ${scrHeader("SFR-온기업-002","회원가입","ONC-SCR-002","고객 유형별 별도 가입 절차 · 투자자/특수고객은 담당자 허가 후 완료")}
+  ${card("users","1. 회원 유형 선택", `<div class="grid grid-cols-3 gap-3">
+    ${[["일반기업 회원","즉시가입","green"],["투자자 회원","담당자 승인 필요","amber"],["특수고객 (펀드/자문)","담당자 승인 필요","amber"]].map(([t,s,tone])=>`
+      <div class="border rounded-lg p-4 text-center border-gray-200 hover:border-[#005088] cursor-pointer">
+        <p class="text-[13px] font-medium mb-1">${t}</p>${badge(s,tone)}
+      </div>`).join("")}
+  </div>`)}
+  ${card("file-check-2","2. 약관 · 개인정보 동의", checklist(["이용약관 동의 (필수)","개인정보 수집·이용 동의 (필수)","마케팅 정보 수신 동의 (선택)"]))}
+  ${card("lock","3. 본인/기업 인증", `<div class="grid grid-cols-3 gap-2 mb-3">
+      ${["공동인증서","휴대폰 인증","간편인증"].map(m=>`<button type="button" class="border border-gray-300 rounded-md py-2 text-[12px] hover:border-[#005088]">${m}</button>`).join("")}
+    </div><p class="text-[11px] text-gray-400">공동인증서 등록/삭제, 안내/신청, 내보내기, Active-X 수동설치 기능 포함</p>`)}
+  ${card("building-2","4. 회원정보 입력", `<div class="grid grid-cols-2 gap-4">
+      ${field("법인명",true,inp("(주)캠코파트너스"))}
+      ${field("법인등록번호",true,inp("110111-1234567"))}
+      ${field("담당자명",true,inp("홍길동"))}
+      ${field("대표자명",true,inp("김대표"))}
+    </div><p class="text-[11px] text-gray-400 mt-2">※ 기업 기본정보/재무정보는 기업정보 조회 서비스와 연동하여 자동입력 (필요 시 수정)</p>`)}
+  <div class="flex justify-end gap-2">${btn("이전",{})}${btn("가입 신청 완료",{primary:true, icon:"check-circle-2", nav:"/003"})}</div>
+`);
+
+RENDERERS["003"] = (detailId) => {
+  if (detailId === "find-id") {
+    return shell("아이디 찾기", `
+      ${backBar("/003","로그인")}
+      ${scrHeader("SFR-온기업-003","아이디 찾기","ONC-SCR-003-D1","본인인증 수단으로 가입된 아이디 조회")}
+      <div class="max-w-md mx-auto">
+        ${card("search","본인 확인", `${tabs(["휴대폰 인증","이메일 인증","공동인증서"],"휴대폰 인증")}
+          ${field("법인등록번호",true,inp("110111-1234567"))}
+          ${field("담당자명",true,inp("홍길동"))}
+          ${field("휴대폰번호",true,inp("010-0000-0000"))}
+          <div class="flex gap-2">${inp("인증번호 6자리","class='flex-1 border border-gray-300 rounded-md px-3 py-2 text-[13px]'")}${btn("인증요청",{small:true})}</div>
+          <div class="mt-4">${btn("아이디 찾기",{primary:true})}</div>`)}
+        ${card("check-circle-2","조회 결과", `<p class="text-[13px] text-gray-700">가입하신 아이디는 <span class="font-medium" style="color:${NAVY}">onc_****abc</span> 입니다.</p>
+          <div class="flex gap-2 mt-3">${btn("로그인 하기",{small:true, nav:"/003"})}${btn("비밀번호 재설정",{small:true, primary:true, nav:"/003/find-pw"})}</div>`)}
+      </div>
+    `);
+  }
+  if (detailId === "find-pw") {
+    return shell("비밀번호 찾기", `
+      ${backBar("/003","로그인")}
+      ${scrHeader("SFR-온기업-003","비밀번호 찾기(재설정)","ONC-SCR-003-D2","본인인증 후 임시 비밀번호 발급 또는 신규 비밀번호 재설정")}
+      <div class="max-w-md mx-auto">
+        ${card("lock","1. 본인 확인", `${field("아이디",true,inp("아이디를 입력하세요"))}
+          ${field("법인등록번호",true,inp("110111-1234567"))}
+          <div class="flex gap-2">${inp("휴대폰 인증번호","class='flex-1 border border-gray-300 rounded-md px-3 py-2 text-[13px]'")}${btn("인증요청",{small:true})}</div>`)}
+        ${card("shield-check","2. 신규 비밀번호 설정", `${field("신규 비밀번호",true,inp("새 비밀번호",'type="password"'),"영문/숫자/특수문자 조합 10자 이상")}
+          ${field("신규 비밀번호 확인",true,inp("새 비밀번호 확인",'type="password"'))}
+          ${btn("비밀번호 재설정 완료",{primary:true, nav:"/003"})}`)}
+        <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 text-[12px] text-amber-800">${ic("alert-circle","w-[14px] h-[14px]")}재설정 즉시 기존 세션은 모두 로그아웃 처리됩니다.</div>
+      </div>
+    `);
+  }
+  return shell("로그인", `
+    ${scrHeader("SFR-온기업-003","로그인 / 로그아웃","ONC-SCR-003","다양한 인증수단 · 5회 오류 시 추가 인증 · 일정시간 미사용 자동 로그아웃")}
+    <div class="max-w-md mx-auto">
+      ${card("lock","로그인", `${tabs(["일반기업","투자자","특수고객"],"일반기업")}
+        ${field("아이디",true,inp("아이디를 입력하세요"))}
+        ${field("비밀번호",true,inp("••••••••",'type="password"'))}
+        <div class="flex items-center gap-2 mb-3 text-[12px] text-gray-500"><input type="checkbox" class="rounded"/> 아이디 저장</div>
+        ${btn("로그인",{primary:true, extra:"w-full justify-center"})}
+        <div class="grid grid-cols-3 gap-2 mt-3">${["디지털원패스","공동인증서","간편인증"].map(m=>`<button type="button" class="border rounded-md py-1.5 text-[11px] text-gray-600">${m}</button>`).join("")}</div>
+        <div class="flex justify-center gap-4 mt-4 text-[12px] text-gray-500">
+          <span data-nav="/003/find-id" class="cursor-pointer hover:text-[#005088]">아이디 찾기</span><span>|</span>
+          <span data-nav="/003/find-pw" class="cursor-pointer hover:text-[#005088]">비밀번호 찾기</span><span>|</span>
+          <span data-nav="/002" class="cursor-pointer hover:text-[#005088]">회원가입</span>
+        </div>`)}
+      <div class="flex items-center gap-2 bg-red-50 border border-red-200 rounded-md px-3 py-2 text-[12px] text-red-700">${ic("alert-circle","w-[14px] h-[14px]")}로그인 오류 5회 발생 시 별도 인증 절차가 필요합니다.</div>
+    </div>
+  `);
+};
+
+RENDERERS["004"] = (detailId) => {
+  if (detailId) {
+    const n = NOTICES.find(x=>x.id===detailId) || NOTICES[0];
+    return shell("게시판", `
+      ${backBar("/004","공지사항")}
+      ${scrHeader("SFR-온기업-004","공지사항 상세","ONC-SCR-004-D")}
+      ${card("file-text", n.title, `<div class="flex gap-4 text-[11px] text-gray-400 mb-4 pb-3 border-b"><span>작성자: ${n.writer}</span><span>작성일: ${n.date}</span></div>
+        <p class="text-[13px] text-gray-700 leading-relaxed">${n.body}</p>
+        <div class="mt-4 flex items-center justify-between border rounded-lg p-3">
+          <div class="flex items-center gap-2 text-[12px]">${ic("paperclip","w-[14px] h-[14px]")}${n.file}</div>${btn("다운로드",{small:true, icon:"download"})}
+        </div>`, `<span class="text-[11px] text-gray-400">조회 ${n.views}</span>`)}
+      <div class="flex justify-between text-[12px] text-gray-500"><span>◀ 이전글</span><span>다음글 ▶</span></div>
+    `);
+  }
+  return shell("게시판", `
+    ${scrHeader("SFR-온기업-004","게시판 (공지/Q&A/자료실/보도자료/이용가이드/FAQ/기타)","ONC-SCR-004")}
+    ${tabs(["공지사항","Q&A","자료실","보도자료","이용가이드","FAQ","기타"],"공지사항")}
+    ${card("file-text","공지사항 목록 (제목 클릭 시 상세 이동)", table(["번호","제목","작성일","조회수"], NOTICES.map((n,i)=>[i===0?"공지":String(NOTICES.length-i), n.title, n.date, n.views]), (i)=>`/004/${NOTICES[i].id}`))}
+    ${card("message-square","Q&A 등록 (제목/질문/알림·공개여부 체크)", `${field("제목",true,inp("문의 제목을 입력하세요"))}
+      ${field("질문 내용",true,ta("",3))}
+      <div class="flex gap-4 text-[12px] text-gray-600 mb-3">
+        <label class="flex items-center gap-1.5"><input type="checkbox"/> 답변 알림 서비스</label>
+        <label class="flex items-center gap-1.5"><input type="checkbox" checked/> 공개 여부</label>
+      </div>${btn("등록",{primary:true, small:true})}`)}
+  `);
+};
+
+/* SFR-005 전용 2탭 바 (공사 기업지원 / 유관기관 기업지원) - data-nav로 실제 라우팅 전환 */
+function tabBar005(active) {
+  const t = (label, nav, key) => `<div data-nav="${nav}" class="px-3 py-2 text-[13px] font-medium border-b-2 cursor-pointer ${active===key?'border-[#005088] text-[#005088]':'border-transparent text-gray-500 hover:text-gray-700'}">${label}</div>`;
+  return `<div class="flex gap-1 mb-4 border-b border-gray-200">
+    ${t("공사 기업지원", "/005", "corp")}
+    ${t("유관기관 기업지원", "/005/gov", "gov")}
+  </div>`;
+}
+
+RENDERERS["005"] = (detailId) => {
+  /* 1) 공사 프로그램 상세 (p1~p10) */
+  const p = PROGRAMS.find(x=>x.id===detailId);
+  if (p) {
+    return shell("사업 안내", `
+      ${backBar("/005","공사 기업지원")}
+      ${scrHeader("SFR-온기업-005", p.name + " 상세안내","ONC-SCR-005-D1", p.summary)}
+      ${card("layout-grid","지원 개요", infoGrid([["지원유형",p.type],["지원한도",p.limit],["지원대상",p.target],["신청방법",p.method],["담당자",p.officer]]))}
+      ${card("clipboard-list","필요 제출서류", checklist(p.docs))}
+      <div class="grid grid-cols-2 gap-3">
+        ${btn("자가진단 먼저 하기",{extra:"justify-center", nav:"/010"})}
+        ${btn(p.navOverride ? "투자자매칭 메뉴로 이동" : "사업 신청하기", {primary:true, extra:"justify-center", nav: p.navOverride || "/011"})}
+      </div>
+    `);
+  }
+  /* 2) 유관기관 프로그램 상세 (g1~g4) */
+  const g = AFFILIATE_PROGRAMS.find(x=>x.id===detailId);
+  if (g) {
+    return shell("사업 안내", `
+      ${backBar("/005/gov","유관기관 기업지원")}
+      ${scrHeader("SFR-온기업-005", g.name + " 상세안내","ONC-SCR-005-D2", g.org)}
+      ${card("landmark","지원 개요", infoGrid([["운영기관",g.org],["지원유형",g.type],["지원대상",g.target],["신청방법",g.method],["담당 문의처",g.officer]]))}
+      ${card("clipboard-list","필요 제출서류 (기관별 상이 · 참고용)", checklist(g.docs))}
+      <div class="flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-md px-3 py-2 text-[12px] mb-4" style="color:#0C447C">
+        ${ic("link-2","w-[14px] h-[14px]")}본 프로그램은 유관기관 자체 심사이며, 온기업에서는 안내 및 홈페이지 연동만 제공합니다.
+      </div>
+      <div class="flex justify-end">
+        <a href="${g.link}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 rounded-md font-medium px-4 py-2 text-[13px] text-white border border-transparent" style="background:${NAVY}">
+          ${ic("link-2","w-[14px] h-[14px]")}${g.org} 홈페이지에서 신청하기
+        </a>
+      </div>
+    `);
+  }
+  /* 3) 유관기관 목록 탭 */
+  if (detailId === "gov") {
+    return shell("사업 안내", `
+      ${scrHeader("SFR-온기업-005","사업 안내 (공사/유관기관 기업지원프로그램)","ONC-SCR-005")}
+      ${tabBar005("gov")}
+      ${card("landmark","유관기관 기업지원프로그램 한눈에 보기 (행 클릭 시 상세안내)", `
+        <p class="text-[11px] text-gray-400 mb-3">중진공 · 신보 · 기보 · 벤처투자 등 유관기관의 기업지원프로그램을 기관별로 안내합니다. 상세안내에서 해당 기관 홈페이지로 연동됩니다.</p>
+        ${table(["운영기관","지원유형","지원 프로그램","지원내용","대상기업"], AFFILIATE_PROGRAMS.map(g=>[g.org,g.type,g.name,g.summary,g.target]), (i)=>`/005/${AFFILIATE_PROGRAMS[i].id}`)}
+      `)}
+    `);
+  }
+  /* 4) 기본: 공사 프로그램 목록 탭 */
+  return shell("사업 안내", `
+    ${scrHeader("SFR-온기업-005","사업 안내 (공사/유관기관 기업지원프로그램)","ONC-SCR-005")}
+    ${tabBar005("corp")}
+    ${card("layout-grid","공사 기업지원프로그램 한눈에 보기 (행 클릭 시 상세안내)", table(["지원유형","지원 프로그램","지원내용","대상기업"], PROGRAMS.map(p=>[p.type,p.name,p.summary,p.target]), (i)=>`/005/${PROGRAMS[i].id}`))}
+  `);
+};
+
+RENDERERS["006"] = () => shell("맞춤형 사업 추천", `
+  ${scrHeader("SFR-온기업-006","맞춤형 사업 추천","ONC-SCR-006","로직트리 기반 추천 · 결과 이력 관리")}
+  ${card("list-checks","기업 상태 진단 (로직트리)", `<div class="grid grid-cols-2 gap-4">
+      ${field("희망 지원유형",true,sel(["자금조달","자산유동화","구조조정"]))}
+      ${field("기업 현재 상태",true,sel(["정상 운영","일시적 유동성 위기","회생절차 진행중"]))}
+    </div>${btn("맞춤형 사업 추천 받기",{primary:true, icon:"search"})}`)}
+  ${card("check-circle-2","추천 결과 (상세안내로 이동)", `<div class="space-y-2">
+    ${[["기업자산 유동화인수","p1"],["동산담보회수지원","p2"],["담보부사채 발행지원","p3"]].map(([r,pid])=>`
+      <div class="flex items-center justify-between border rounded-lg p-3">
+        <div><p class="text-[13px] font-medium">${r}</p><p class="text-[11px] text-gray-400">간략한 지원내용 소개 텍스트</p></div>
+        <div class="flex gap-2">${btn("상세보기",{small:true, nav:"/005/"+pid})}${btn("신청하기",{small:true, primary:true, nav:"/011"})}</div>
+      </div>`).join("")}
+  </div>`)}
+`);
+
+RENDERERS["007"] = () => shell("챗봇", `
+  ${scrHeader("SFR-온기업-007","챗봇 서비스","ONC-SCR-007","시나리오 기반 응답 · 통합검색 연계 · 상담 신청 연결")}
+  <div class="max-w-sm ml-auto border border-gray-200 rounded-xl overflow-hidden">
+    <div class="flex items-center gap-2 px-4 py-3 text-white" style="background:${NAVY}">${ic("bot","w-4 h-4")}<span class="text-[13px] font-medium">온기업 상담봇</span></div>
+    <div class="p-4 space-y-3 bg-gray-50 h-64">
+      <div class="bg-white rounded-lg p-3 text-[12px] max-w-[85%]">안녕하세요! 무엇을 도와드릴까요?</div>
+      <div class="flex flex-wrap gap-1.5">${["신청절차 안내","진행상태 확인","상담 연결"].map(q=>`<span class="text-[11px] border border-gray-300 rounded-full px-2.5 py-1 bg-white">${q}</span>`).join("")}</div>
+      <div class="bg-blue-50 rounded-lg p-3 text-[12px] max-w-[85%] ml-auto text-right" style="color:#0C447C">진행상태 확인하고 싶어요</div>
+      <div class="bg-white rounded-lg p-3 text-[12px] max-w-[85%]">신청번호를 입력해주세요, 또는 상담원 연결을 원하시면 "상담신청"을 눌러주세요.</div>
+    </div>
+    <div class="flex gap-2 p-3 border-t border-gray-200">${inp("메시지를 입력하세요","class='flex-1 border border-gray-300 rounded-md px-3 py-2 text-[13px]'")}${btn("전송",{primary:true, small:true, icon:"send"})}</div>
+  </div>
+`);
+
+/* ===== SFR-온기업-007 하단: "내부 업무시스템에 챗봇에 대한 관리자 기능 구현 필요" 반영 ===== */
+const CHATBOT_SCENARIOS = [
+  { id:"sc1", topic:"기업지원 프로그램 안내", trigger:"프로그램 / 지원 / 신청방법", status:"운영중", tone:"green", updated:"2026-06-10", body:"기업지원 프로그램 관련 질의 시 지원유형별 순차 선택지를 제공하고, 최종적으로 사업안내(SFR-005) 화면 링크로 응답합니다." },
+  { id:"sc2", topic:"신청절차 · 서류 안내", trigger:"서류 / 제출 / 필요서류", status:"운영중", tone:"green", updated:"2026-06-09", body:"프로그램별 제출서류 체크리스트를 키워드 기반으로 매칭하여 응답합니다." },
+  { id:"sc3", topic:"진행상태 안내", trigger:"진행상태 / 신청번호 / 심사", status:"운영중", tone:"green", updated:"2026-06-08", body:"신청번호 입력을 요청한 뒤 My Page 진행상태 조회 결과를 요약하여 응답합니다." },
+  { id:"sc4", topic:"상담 연결 안내", trigger:"상담 / 연결 / 상담원", status:"운영중", tone:"green", updated:"2026-06-05", body:"상담 신청(SFR-009) 화면으로 연결하며, 상담 가능 시간과 방식(방문/영상)을 안내합니다." },
+  { id:"sc5", topic:"홈페이지 이용 문의", trigger:"로그인 / 회원가입 / 오류", status:"검수중", tone:"amber", updated:"2026-06-14", body:"로그인·회원가입 관련 자주 묻는 질문에 대응하는 신규 시나리오. 응답 정확도 검수 진행 중입니다." },
+];
+const CHATBOT_LOGS = [
+  { id:"lg1", time:"2026-06-16 10:22", user:"익명(모바일)", query:"동산담보회수지원 신청 서류가 뭐예요?", answer:"동산담보회수지원 제출서류는 동산목록, 감정평가의뢰서, 담보설정계약서입니다.", result:"성공", tone:"green", feedback:"도움됨" },
+  { id:"lg2", time:"2026-06-16 09:47", user:"(주)ABC", query:"내 신청 진행 상태 어디까지 왔나요?", answer:"죄송합니다. 질문을 이해하지 못했습니다. 다시 말씀해 주시겠어요?", result:"실패", tone:"red", feedback:"도움안됨" },
+  { id:"lg3", time:"2026-06-16 09:10", user:"(주)XYZ", query:"상담원과 통화하고 싶어요", answer:"상담 신청 화면으로 연결해드릴게요. 방문상담과 영상상담 중 선택해 주세요.", result:"성공", tone:"green", feedback:"-" },
+];
+const CHATBOT_STATS = {
+  cumulative:"18,204명", realtime:"37명", perUser:"3.2건", usageRate:"64%", accuracy:"91.4%",
+  topQuestions:["신청 진행상태 확인 방법","제출서류 목록 문의","자가진단 결과 재확인","상담 예약 변경","비밀번호 재설정"],
+  topKeywords:["진행상태","서류","신청","상담","비밀번호","자가진단","환불"],
+  highFailure:["세금계산서 발급 문의 (실패율 42%)","계약서 재발급 절차 (실패율 35%)","펀드 수익률 문의 (실패율 28%)"],
+  popularQueries:["동산담보회수지원 서류 안내","S&LB 신청자격 문의","My Page 진행상태 조회"],
+};
+
+RENDERERS["007-1"] = (detailId) => {
+  const sc = CHATBOT_SCENARIOS.find(x=>x.id===detailId);
+  if (sc) {
+    return shell("관리자 · 챗봇 관리자", `
+      ${backBar("/007-1","시나리오")}
+      ${scrHeader("SFR-온기업-007", sc.topic + " 시나리오 상세","ONC-SCR-007-1-D")}
+      ${card("bot","시나리오 정보", infoGrid([["트리거 키워드",sc.trigger],["상태",statusPill(sc.status,sc.tone)],["최종 수정일",sc.updated]]))}
+      ${card("clipboard-list","응답 로직", `<p class="text-[13px] text-gray-700 leading-relaxed">${sc.body}</p>`)}
+      ${card("settings","시나리오 편집", `${field("트리거 키워드",true,inp(sc.trigger))}
+        ${field("응답 스크립트",true,`<textarea rows="4" class="w-full border border-gray-300 rounded-md p-2 text-[13px]">${sc.body}</textarea>`)}
+        ${field("운영 상태",false,sel(["운영중","검수중","비활성"]))}
+        <div class="flex justify-end gap-2">${btn("비활성화",{})}${btn("저장",{primary:true, icon:"check-circle-2"})}</div>`)}
+    `);
+  }
+  const lg = CHATBOT_LOGS.find(x=>x.id===detailId);
+  if (lg) {
+    return shell("관리자 · 챗봇 관리자", `
+      ${backBar("/007-1","문의·응답 이력")}
+      ${scrHeader("SFR-온기업-007","문의·응답 상세","ONC-SCR-007-1-D")}
+      ${card("clock","문의 정보", infoGrid([["문의일시",lg.time],["이용자",lg.user],["처리결과",statusPill(lg.result,lg.tone)],["이용자 피드백",lg.feedback]]))}
+      ${card("message-square","질의 내용", `<p class="text-[13px] text-gray-700">${lg.query}</p>`)}
+      ${card("bot","챗봇 응답", `<p class="text-[13px] text-gray-700">${lg.answer}</p>`)}
+      ${lg.result==="실패" ? card("alert-circle","비정상 응답 조치", `${field("조치 메모",false,ta("실패 원인 분석 및 시나리오 보완 계획을 입력하세요",2))}${btn("시나리오 개선 등록",{primary:true, icon:"send"})}`) : ""}
+    `);
+  }
+  return shell("관리자 · 챗봇 관리자", `
+    ${scrHeader("SFR-온기업-007","[온기업-관리자] 챗봇 관리자","ONC-SCR-007-1","내부 업무시스템 챗봇 관리 기능 · 시나리오/설문조사 조회·등록 · 이력 및 현황관리 · 유형별 통계")}
+    <div class="grid grid-cols-5 gap-3 mb-4">
+      ${[["누적 이용자 수",CHATBOT_STATS.cumulative],["실시간 이용자 수",CHATBOT_STATS.realtime],["인당 대화 건수",CHATBOT_STATS.perUser],["이용률",CHATBOT_STATS.usageRate],["답변 정확도",CHATBOT_STATS.accuracy]].map(([l,v])=>`
+        <div class="bg-white border rounded-xl p-3"><p class="text-[11px] text-gray-500">${l}</p><p class="text-[18px] font-medium mt-1" style="color:${NAVY}">${v}</p></div>`).join("")}
+    </div>
+    ${card("bot","챗봇 시나리오 관리 (조회/등록 · 클릭 시 상세/수정)", `
+      <div class="flex justify-end mb-2">${btn("신규 시나리오 등록",{primary:true, small:true, icon:"plus"})}</div>
+      ${table(["시나리오 주제","트리거 키워드","상태","최종 수정일"], CHATBOT_SCENARIOS.map(s=>[s.topic,s.trigger,statusPill(s.status,s.tone),s.updated]), (i)=>`/007-1/${CHATBOT_SCENARIOS[i].id}`)}
+    `)}
+    ${card("clipboard-list","문의 및 응답 이력 관리 (클릭 시 상세)", table(["문의일시","이용자","질의 요약","처리결과"], CHATBOT_LOGS.map(l=>[l.time,l.user,l.query.length>22?l.query.slice(0,22)+"…":l.query,statusPill(l.result,l.tone)]), (i)=>`/007-1/${CHATBOT_LOGS[i].id}`))}
+    <div class="grid grid-cols-2 gap-4">
+      ${card("bar-chart-3","자주 묻는 질문 Top 5", `<ol class="list-decimal list-inside space-y-1.5 text-[13px] text-gray-700">${CHATBOT_STATS.topQuestions.map(q=>`<li>${q}</li>`).join("")}</ol>`)}
+      ${card("filter","실패율 높은 질의 Top 3", `<ol class="list-decimal list-inside space-y-1.5 text-[13px] text-red-700">${CHATBOT_STATS.highFailure.map(q=>`<li>${q}</li>`).join("")}</ol>`)}
+      ${card("archive","많이 언급된 키워드", `<div class="flex flex-wrap gap-1.5">${CHATBOT_STATS.topKeywords.map(k=>`<span class="text-[11px] border border-gray-300 rounded-full px-2.5 py-1 bg-gray-50 text-gray-600">${k}</span>`).join("")}</div>`)}
+      ${card("check-circle-2","인기 질의 Top 3", `<ol class="list-decimal list-inside space-y-1.5 text-[13px] text-gray-700">${CHATBOT_STATS.popularQueries.map(q=>`<li>${q}</li>`).join("")}</ol>`)}
+    </div>
+    ${card("list-checks","설문조사 관리 (조회/등록)", `
+      <div class="flex justify-end mb-2">${btn("신규 설문 등록",{small:true, icon:"plus"})}</div>
+      ${table(["설문명","응답수","진행상태"], [["챗봇 이용 만족도 조사 (2026 상반기)","842",statusPill("진행중","blue")],["상담 연결 편의성 조사","305",statusPill("종료","gray")]])}
+    `)}
+  `);
+};
+
+/* SFR-008 전용 4탭 바 */
+function tabBar008(active) {
+  const t = (label, nav, key) => `<div data-nav="${nav}" class="px-3 py-2 text-[13px] font-medium border-b-2 cursor-pointer whitespace-nowrap ${active===key?'border-[#005088] text-[#005088]':'border-transparent text-gray-500 hover:text-gray-700'}">${label}</div>`;
+  return `<div class="flex gap-1 mb-4 border-b border-gray-200 overflow-x-auto">
+    ${t("투자자 검색 (기업용)", "/008", "inv")}
+    ${t("투자희망기업 검색 (투자자용)", "/008/wanted", "wanted")}
+    ${t("투자자매칭 신청", "/008/apply", "apply")}
+    ${t("투자자 라운지", "/008/lounge", "lounge")}
+  </div>`;
+}
+
+RENDERERS["008"] = (detailId) => {
+  /* ---- 1) 투자자 검색: 투자자 상세 ---- */
+  const inv = INVESTORS.find(x=>x.id===detailId);
+  if (inv) {
+    return shell("투자자 매칭", `
+      ${backBar("/008","투자자 검색")}
+      ${scrHeader("SFR-온기업-008", inv.name + " 상세 프로필","ONC-SCR-008-D1")}
+      ${card("building-2","투자자 기본정보", infoGrid([["투자자 유형",inv.type],["설립연도",inv.est],["선호 투자업종",inv.sector],["운용규모",inv.size],["연락처",inv.contact]]))}
+      ${card("wallet","주요 펀드 정보", `<p class="text-[13px] text-gray-700">${inv.funds}</p>`)}
+      ${card("clipboard-list","투자 성향 및 소개", `<p class="text-[13px] text-gray-700">${inv.detail}</p>`)}
+      <div class="flex gap-2 justify-end">${btn("IR자료 열람요청",{icon:"file-text"})}${btn("투자자매칭 신청하기",{primary:true, icon:"send", nav:"/008/apply"})}</div>
+    `);
+  }
+  /* ---- 2) 투자희망기업 검색: 기업 상세 (정보공개동의 기업만 노출) ---- */
+  const co = WANTED_COMPANIES.find(x=>x.id===detailId);
+  if (co) {
+    return shell("투자자 매칭", `
+      ${backBar("/008/wanted","투자희망기업 검색")}
+      ${scrHeader("SFR-온기업-008", co.name + " 상세 프로필","ONC-SCR-008-D2", "정보공개 동의 항목에 한해 조회 가능")}
+      ${card("building-2","기업 기본정보", infoGrid([["업종",co.industry],["설립연도",co.founded],["투자희망금액",co.amount],["핵심사업",co.core]]))}
+      ${card("layout-grid","사업 소개", `<p class="text-[13px] text-gray-700 mb-3">${co.intro}</p>`+infoGrid([["주요제품",co.product],["재무정보",co.finance]]))}
+      <div class="flex gap-2 justify-end">${btn("IR자료 열람요청",{icon:"file-text"})}${btn("쪽지보내기",{primary:true, icon:"mail"})}</div>
+    `);
+  }
+  /* ---- 4) 투자자 라운지 하위 상세들 ---- */
+  const ln = MATCH_APPS.find(x=>x.id===detailId);
+  if (ln) {
+    return shell("투자자 매칭", `
+      ${backBar("/008/lounge","투자자 라운지")}
+      ${scrHeader("SFR-온기업-008", ln.company + " 매칭신청 상세","ONC-SCR-008-D3")}
+      ${card("clipboard-list","신청 현황", infoGrid([["신청일",ln.date],["기업정보공개현황",ln.disclose],["검토현황",ln.review],["검토결과",ln.result]]))}
+      ${card("paperclip","등록 서류", ln.docs.map(d=>`<div class="flex items-center justify-between border rounded-lg p-2.5 mb-2 last:mb-0 text-[12px]"><div class="flex items-center gap-2">${ic("file-text","w-[14px] h-[14px]")}${d}</div>${btn("다운로드",{small:true, icon:"download"})}</div>`).join(""))}
+      ${card("message-square","검토 메모", `<p class="text-[13px] text-gray-700">${ln.note}</p>`)}
+    `);
+  }
+  const ms = LOUNGE_MESSAGES.find(x=>x.id===detailId);
+  if (ms) {
+    return shell("투자자 매칭", `
+      ${backBar("/008/lounge","투자자 라운지")}
+      ${scrHeader("SFR-온기업-008", ms.company + " 쪽지 확인·답변","ONC-SCR-008-D4")}
+      ${card("mail","받은 쪽지", `<p class="text-[11px] text-gray-400 mb-2">발신: ${ms.company} · ${ms.date}</p><p class="text-[13px] text-gray-700 pb-3 border-b">${ms.content}</p>
+        <div class="mt-3">${field("답변 작성",false,ta("",3))}</div>${btn("답변 전송",{primary:true, icon:"send"})}`)}
+    `);
+  }
+  const ct = LOUNGE_CONTRACTS.find(x=>x.id===detailId);
+  if (ct) {
+    return shell("투자자 매칭", `
+      ${backBar("/008/lounge","투자자 라운지")}
+      ${scrHeader("SFR-온기업-008", ct.company + " 투자계약 상세","ONC-SCR-008-D5")}
+      ${card("file-signature","계약 정보", infoGrid([["계약체결일자",ct.date],["투자금액",ct.amount],["투자방식",ct.method],["상태",statusPill(ct.status,ct.tone)]]))}
+      <div class="flex justify-end gap-2">${btn("계약서 수정",{})}${btn("공사로 재전송",{primary:true, icon:"send"})}</div>
+    `);
+  }
+  const bd = LOUNGE_BOARD.find(x=>x.id===detailId);
+  if (bd) {
+    return shell("투자자 매칭", `
+      ${backBar("/008/lounge","투자자 라운지")}
+      ${scrHeader("SFR-온기업-008","투자자 게시판 상세","ONC-SCR-008-D6")}
+      ${card("message-square", bd.title, `<p class="text-[11px] text-gray-400 mb-2 pb-2 border-b">작성일 ${bd.date} · 조회 ${bd.views}</p><p class="text-[13px] text-gray-700">${bd.body}</p>`)}
+    `);
+  }
+  const ir = LOUNGE_IR_REQUESTS.find(x=>x.id===detailId);
+  if (ir) {
+    return shell("투자자 매칭", `
+      ${backBar("/008/lounge","투자자 라운지")}
+      ${scrHeader("SFR-온기업-008", ir.company + " IR자료 열람요청 상세","ONC-SCR-008-D7")}
+      ${card("file-text","요청 정보", infoGrid([["요청기업",ir.company],["요청일",ir.date],["상태",statusPill(ir.status,ir.tone)]]))}
+      <div class="flex justify-end">${btn("IR자료 열람하기",{primary:true, icon:"eye"})}</div>
+    `);
+  }
+
+  /* ---- 탭 2: 투자희망기업 검색 목록 ---- */
+  if (detailId === "wanted") {
+    return shell("투자자 매칭", `
+      ${scrHeader("SFR-온기업-008","투자자 매칭 지원","ONC-SCR-008")}
+      ${tabBar008("wanted")}
+      ${card("filter","검색 조건", `<div class="grid grid-cols-3 gap-4">
+          ${field("업종",false,sel(["전체","친환경 소재","디지털 헬스케어","제조업"]))}
+          ${field("업력",false,sel(["전체","3년 미만","3~7년","7년 이상"]))}
+          ${field("투자희망금액",false,sel(["전체","10억 미만","10~30억","30억 이상"]))}
+        </div><p class="text-[11px] text-gray-400 mt-1">※ 투자매칭신청 · 정보공개동의를 완료한 기업에 한해 조회됩니다.</p>`)}
+      ${card("building-2","투자희망기업 목록 (클릭 시 상세 프로필)", table(["기업명","업종","설립연도","투자희망금액"], WANTED_COMPANIES.map(c=>[c.name,c.industry,c.founded,c.amount]), (i)=>`/008/${WANTED_COMPANIES[i].id}`))}
+    `);
+  }
+  /* ---- 탭 3: 투자자매칭 신청 (기업이 신청) ---- */
+  if (detailId === "apply") {
+    return shell("투자자 매칭", `
+      ${scrHeader("SFR-온기업-008","투자자매칭 신청","ONC-SCR-008", "자가진단 및 약관 동의 → 신청정보 입력 → 첨부파일 업로드 → 제출")}
+      ${tabBar008("apply")}
+      ${card("list-checks","1. 자가진단 및 약관 동의", checklist(["최근 3년 이내 투자유치 이력 점검 완료","정보공개 범위 및 개인정보 처리방침 동의","투자자매칭 이용약관 동의"]))}
+      ${card("clipboard-list","2. 신청 정보 입력", `<div class="grid grid-cols-2 gap-4">
+          ${field("투자유치 계획",true,inp("예: Series A, 30억원 규모"))}
+          ${field("정보공개 대상 투자자",true,sel(["전체 투자자 공개","VC만 공개","PE만 공개","선택 투자자만 공개"]))}
+        </div>${field("사업계획 개요",true,ta("",3))}`)}
+      ${card("paperclip","3. 첨부파일 업로드", `<div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
+          ${ic("upload","w-6 h-6 mx-auto mb-2")}<p class="text-[13px] font-medium">기업재무자료 · 기업IR자료 · 홍보자료 업로드</p>
+          <p class="text-[11px] text-gray-400">PDF, PPT, XLS · 파일당 20MB</p>
+        </div>`)}
+      <div class="flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-md px-3 py-2 text-[12px] mb-4" style="color:#0C447C">${ic("bell","w-[14px] h-[14px]")}신청 제출 시 정보공개 대상으로 지정된 투자자에게 신청 알림이 자동 발송됩니다.</div>
+      <div class="flex justify-end gap-2">${btn("임시저장",{})}${btn("신청 제출",{primary:true, icon:"send"})}</div>
+    `);
+  }
+  /* ---- 탭 4: 투자자 라운지 (투자자 전용 활용 공간) ---- */
+  if (detailId === "lounge") {
+    return shell("투자자 매칭", `
+      ${scrHeader("SFR-온기업-008","투자자 라운지","ONC-SCR-008", "투자자 전용 · 매칭신청 현황/쪽지/IR자료/투자계약/이력/게시판 관리")}
+      ${tabBar008("lounge")}
+      ${card("clipboard-list","투자매칭신청 현황 조회 (신청현황 · 기업정보공개현황 · 검토현황/결과 · 클릭 시 상세)", table(["기업명","신청일","기업정보공개현황","검토현황","검토결과"], MATCH_APPS.map(a=>[a.company,a.date,a.disclose,a.review,a.result==="매칭성사"?statusPill(a.result,"green"):a.result]), (i)=>`/008/${MATCH_APPS[i].id}`))}
+      <div class="grid grid-cols-2 gap-4">
+        ${card("mail","기업이 보낸 쪽지 확인·답변 (클릭 시 상세)", table(["보낸기업","일자","상태"], LOUNGE_MESSAGES.map(m=>[m.company,m.date,statusPill(m.status,m.tone)]), (i)=>`/008/${LOUNGE_MESSAGES[i].id}`))}
+        ${card("file-text","열람 요청한 IR자료 조회 (클릭 시 상세)", table(["요청기업","요청일","상태"], LOUNGE_IR_REQUESTS.map(r=>[r.company,r.date,statusPill(r.status,r.tone)]), (i)=>`/008/${LOUNGE_IR_REQUESTS[i].id}`))}
+      </div>
+      ${card("landmark","한국평가데이터(KODATA) 회생기업 자료 열람", `<p class="text-[13px] text-gray-600 mb-3">회생기업 재무·법원단계·K-Score 자료를 조회할 수 있습니다.</p>${btn("KODATA 회생기업 자료 조회로 이동",{primary:true, icon:"link-2", nav:"/020"})}`)}
+      ${card("file-signature","투자매칭 성사 · 투자계약 등록 및 전송 (계약현황 · 체결일자 · 투자금액 · 투자방식, 클릭 시 상세)", table(["기업명","계약체결일자","투자금액","투자방식","상태"], LOUNGE_CONTRACTS.map(c=>[c.company,c.date,c.amount,c.method,statusPill(c.status,c.tone)]), (i)=>`/008/${LOUNGE_CONTRACTS[i].id}`))}
+      ${card("clock","투자매칭 이력 확인", table(["기업명","매칭일","진행결과"], [["(주)헬스브릿지","2026-06-15",statusPill("계약체결","green")],["(주)그린테크","2026-06-01",statusPill("검토중","amber")]]))}
+      ${card("message-square","투자자 게시판 (게시글 등록·확인, 클릭 시 상세)", `<div class="flex justify-end mb-2">${btn("게시글 등록",{small:true, icon:"plus"})}</div>${table(["제목","작성일","조회수"], LOUNGE_BOARD.map(b=>[b.title,b.date,String(b.views)]), (i)=>`/008/${LOUNGE_BOARD[i].id}`)}`)}
+    `);
+  }
+  /* ---- 탭 1(기본): 투자자 검색 목록 ---- */
+  return shell("투자자 매칭", `
+    ${scrHeader("SFR-온기업-008","투자자 매칭 지원","ONC-SCR-008","투자자 검색(기업) / 투자희망기업 검색(투자자) / 투자자매칭 신청 / 투자자 라운지")}
+    ${tabBar008("inv")}
+    <div class="grid grid-cols-3 gap-4">
+      ${card("filter","검색 조건", `${field("투자자 유형",false,sel(["전체","VC","PE"]))}${field("선호 투자업종",false,sel(["전체","제조업","IT서비스"]))}${field("선호 투자규모 · 운용규모",false,sel(["전체","10억 미만","10~500억","500억 이상"]))}${btn("검색",{primary:true, extra:"w-full justify-center"})}`)}
+      <div class="col-span-2 space-y-2">
+        ${INVESTORS.map(n=>`<div data-nav="/008/${n.id}" class="border rounded-lg p-3 flex justify-between items-center cursor-pointer hover:border-[#005088]">
+          <div><p class="text-[13px] font-medium">${n.name}</p><p class="text-[11px] text-gray-400">설립일 ${n.est} · 선호업종 ${n.sector} · 운용규모 ${n.size}</p></div>
+          ${btn("상세보기",{small:true, icon:"eye"})}
+        </div>`).join("")}
       </div>
     </div>
-  </div>
+  `);
+};
 
-  ${card("git-branch","화면 그룹별 흐름", `
-    <div class="grid grid-cols-3 gap-4 text-[12px]">
-      <div class="border rounded-lg p-3.5"><p class="font-semibold text-gray-800 mb-1.5">${ic("user-check","w-3.5 h-3.5 inline mr-1")}자문기관 (021)</p><p class="text-gray-500">회계법인·감정평가법인·법무법인·건물관리기관(S&amp;LB)·컨설팅기관(DIP) — 의뢰 접수부터 결과·비용청구까지</p></div>
-      <div class="border rounded-lg p-3.5"><p class="font-semibold text-gray-800 mb-1.5">${ic("landmark","w-3.5 h-3.5 inline mr-1")}펀드 운용사 GP (022~030)</p><p class="text-gray-500">명세관리 → 투자심사·총회·보고·공문 → 출자금/분배 → 실적검증 → 선박펀드 특화보고 → 출자사업 신청</p></div>
-      <div class="border rounded-lg p-3.5"><p class="font-semibold text-gray-800 mb-1.5">${ic("shield","w-3.5 h-3.5 inline mr-1")}수탁기관 (031~032)</p><p class="text-gray-500">운용지시서 접수·처리 결과보고, 계좌·자산·잔고 정보대사</p></div>
+RENDERERS["009"] = (detailId) => {
+  if (detailId) {
+    const c = CONSULT_HISTORY.find(x=>x.id===detailId) || CONSULT_HISTORY[0];
+    return shell("상담 신청", `
+      ${backBar("/009","상담 이력")}
+      ${scrHeader("SFR-온기업-009","상담 상세","ONC-SCR-009-D")}
+      ${card("calendar","상담 정보", infoGrid([["상담일",c.date],["상담방식",c.mode],["관심업무",c.topic],["담당자",c.officer]]))}
+      ${card("clipboard-list","상담 결과 요약", `<p class="text-[13px] text-gray-700">${c.note}</p>`)}
+    `);
+  }
+  return shell("상담 신청", `
+    ${scrHeader("SFR-온기업-009","상담 신청","ONC-SCR-009")}
+    ${card("calendar","상담 신청(예약)", `<div class="grid grid-cols-2 gap-4">
+        ${field("상담 방식",true,`<div class="flex gap-3"><label class="flex items-center gap-1.5 text-[13px]"><input type="radio" name="mode" checked/> 영상상담(Zoom)</label><label class="flex items-center gap-1.5 text-[13px]"><input type="radio" name="mode"/> 방문상담</label></div>`)}
+        ${field("희망 일시",true,inp("",'type="datetime-local"'))}
+        ${field("관심 업무",true,sel(["기업자산 유동화인수","투자자 매칭"]))}
+        ${field("연락처",true,inp("010-0000-0000"))}
+      </div>${btn("상담 신청",{primary:true, icon:"calendar"})}`)}
+    ${card("clipboard-list","상담 신청 이력 (클릭 시 상세)", table(["신청일","방식","관심업무","상태"], CONSULT_HISTORY.map(c=>[c.date,c.mode,c.topic,statusPill(c.status, c.status==="완료"?"gray":"green")]), (i)=>`/009/${CONSULT_HISTORY[i].id}`))}
+  `);
+};
+
+RENDERERS["010"] = () => shell("자가진단", `
+  ${scrHeader("SFR-온기업-010","자가진단","ONC-SCR-010","사업별 체크리스트 기반 신청자격 자동/자가 확인")}
+  ${card("list-checks","자가진단 체크리스트 - 기업자산 유동화인수", `${checklist(["최근 3년 이상 사업영위 여부","회생절차 미개시 여부","동일 업종 유사사업 신청 이력 없음","재무제표 외부감사 대상 여부"])}
+    <div class="flex justify-end mt-4">${btn("진단 결과 확인",{primary:true, icon:"check-circle-2"})}</div>`)}
+  ${card("check-circle-2","진단 결과", `<p class="text-[13px] text-gray-600">모든 자격요건을 충족하여 사업 신청이 가능합니다.</p>${btn("사업 신청으로 이동",{primary:true, small:true, nav:"/011"})}`, statusPill("신청 가능","green"))}
+`);
+
+RENDERERS["011"] = () => shell("사업 신청", `
+  ${scrHeader("SFR-온기업-011","사업 신청","ONC-SCR-011","회원정보 자동입력 · 필수서류 미제출시 진행불가 · 신청서 출력")}
+  <div class="mb-6">${timeline(["자가진단","신청정보 입력","서류 제출","완료"], 1)}</div>
+  ${card("building-2","신청기업 정보", `<div class="grid grid-cols-2 gap-4">
+      ${field("법인명",true,inp("(주)캠코파트너스",'readonly class="w-full border border-gray-300 rounded-md px-3 py-2 text-[13px] bg-gray-50"'))}
+      ${field("법인등록번호",true,inp("110111-1234567",'readonly class="w-full border border-gray-300 rounded-md px-3 py-2 text-[13px] bg-gray-50"'))}
+      ${field("담당자명",true,inp("홍길동"))}
+      ${field("희망 지원금액",false,inp("0"),"단위: 백만원")}
+    </div>${field("지원 희망 사유 및 사업계획 개요",true,ta("",3))}`, `<span class="text-[11px] px-2 py-0.5 rounded bg-blue-50 text-[#0C447C] font-medium">${ic("link-2","w-[10px] h-[10px] inline mr-1")}회원정보 자동연계</span>`)}
+  ${card("paperclip","제출서류 첨부", `<div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
+      ${ic("upload","w-6 h-6 mx-auto mb-2")}<p class="text-[13px] font-medium" style="color:${NAVY}"></p>
+      <p class="text-[13px] font-medium">파일을 끌어다 놓거나 클릭하여 업로드</p>
+      <p class="text-[11px] text-gray-400">PDF, HWP, XLS, ZIP · 파일당 20MB · 암호화 저장</p>
+    </div>`)}
+  <div class="flex justify-between">${btn("이전",{})}<div class="flex gap-2">${btn("임시저장",{})}${btn("다음 단계",{primary:true})}</div></div>
+`);
+
+RENDERERS["012"] = (detailId) => {
+  if (detailId && detailId[0]==="a") {
+    const a = MY_APPLICATIONS.find(x=>x.id===detailId) || MY_APPLICATIONS[0];
+    return shell("My Page", `
+      ${backBar("/012","My Page")}
+      ${scrHeader("SFR-온기업-012", a.name + " 평가 진행상황","ONC-SCR-012-D")}
+      ${card("list-checks","심사/평가 진행 단계", timeline(["접수","사전검토","외부평가","심의","계약체결"], a.stage-1))}
+      ${card("user","담당자 정보", infoGrid([["담당자",a.officer],["접수일",a.date],["현재 단계",a.stageLabel]]))}
+    `);
+  }
+  if (detailId && detailId[0]==="k") {
+    const k = MY_CONTRACTS.find(x=>x.id===detailId) || MY_CONTRACTS[0];
+    return shell("My Page", `
+      ${backBar("/012","My Page")}
+      ${scrHeader("SFR-온기업-012","계약 납부 상세","ONC-SCR-012-D")}
+      ${card("file-signature","납부 정보", infoGrid([["사업명",k.program],["납부회차",k.round],["납부대상금액",k.amount],["납부일",k.date]]) + `<div class="mt-3">${statusPill(k.status,k.tone)}</div>`)}
+      <div class="flex gap-2 justify-end">${btn("계약서 조회",{icon:"file-text"})}${btn("증명서 발급요청",{primary:true, icon:"file-check-2"})}</div>
+    `);
+  }
+  return shell("My Page", `
+    ${scrHeader("SFR-온기업-012","My Page","ONC-SCR-012")}
+    ${tabs(["나의 정보","신청사업 평가 진행상황","요청사항 관리","계약 관리"],"신청사업 평가 진행상황")}
+    ${card("list-checks","신청사업 평가 진행상황 (클릭 시 상세)", table(["사업명","접수일","현재단계","담당자"], MY_APPLICATIONS.map(a=>[a.name,a.date,statusPill(a.stageLabel,"blue"),a.officer]), (i)=>`/012/${MY_APPLICATIONS[i].id}`))}
+    ${card("file-signature","계약 관리 - 납부 현황 (클릭 시 상세)", table(["사업명","납부회차","납부대상금액","납부일","납부상태"], MY_CONTRACTS.map(k=>[k.program,k.round,k.amount,k.date,statusPill(k.status,k.tone)]), (i)=>`/012/${MY_CONTRACTS[i].id}`))}
+    ${card("message-square","요청사항 관리 (공사 담당자 소통)", `<div class="flex items-center justify-between border rounded-lg p-3">
+      <div><p class="text-[13px] font-medium">추가자료 요청 - 재무제표 최신본</p><p class="text-[11px] text-gray-400">담당자: 김담당 · 요구일 2026-06-15</p></div>${statusPill("대기","amber")}
+    </div>`)}
+  `);
+};
+
+RENDERERS["013"] = (detailId) => {
+  if (detailId) {
+    const q = QA_ADMIN.find(x=>x.id===detailId) || QA_ADMIN[0];
+    return shell("관리자 · 게시판 관리", `
+      ${backBar("/013","Q&A 목록")}
+      ${scrHeader("SFR-온기업-013","Q&A 답변 등록","ONC-SCR-013-D")}
+      ${card("message-square", q.title, `<p class="text-[11px] text-gray-400 mb-2">질문자: ${q.writer}</p>
+        <p class="text-[13px] text-gray-700 mb-4 pb-3 border-b">${q.question}</p>
+        ${field("답변 내용",true,`<textarea rows="4" class="w-full border border-gray-300 rounded-md p-2 text-[13px]">${q.answer||""}</textarea>`)}
+        ${btn("답변 등록",{primary:true, icon:"send"})}`)}
+    `);
+  }
+  return shell("관리자 · 게시판 관리", `
+    ${scrHeader("SFR-온기업-013","[온기업-관리자] 게시판 관리","ONC-SCR-013")}
+    ${tabs(["공지사항","Q&A","자료실","보도자료","투자자라운지"],"Q&A")}
+    ${card("settings","게시판 설정", `<div class="grid grid-cols-2 gap-4">${field("게시판명",false,inp("묻고답하기(Q&A)"))}${field("접근 및 작성 권한",false,sel(["전체 회원","기업회원만"]))}</div>`)}
+    ${card("message-square","Q&A 답변 관리 (클릭 시 답변 등록/조회)", table(["제목","질문자","답변상태","답변자"], QA_ADMIN.map(q=>[q.title,q.writer,statusPill(q.status,q.status==="완료"?"green":"amber"),q.officer]), (i)=>`/013/${QA_ADMIN[i].id}`))}
+  `);
+};
+
+RENDERERS["014"] = (detailId) => {
+  if (detailId) {
+    const l = SYS_LOGS.find(x=>x.id===detailId) || SYS_LOGS[0];
+    return shell("관리자 · 시스템 관리", `
+      ${backBar("/014","시스템 로그")}
+      ${scrHeader("SFR-온기업-014","시스템 로그 상세","ONC-SCR-014-D")}
+      ${card("alert-circle","로그 정보", infoGrid([["발생시각",l.time],["구분",l.type],["상태",l.status]]))}
+      ${card("clipboard-list","상세 내용", `<p class="text-[13px] text-gray-700">${l.detail}</p>`)}
+    `);
+  }
+  return shell("관리자 · 시스템 관리", `
+    ${scrHeader("SFR-온기업-014","[온기업-관리자] 시스템 관리","ONC-SCR-014")}
+    <div class="grid grid-cols-2 gap-4">
+      ${card("database","코드 / 메뉴 관리", table(["코드","코드명","관리"], [["CD001","지원유형 코드",btn("수정",{small:true})],["CD002","회원구분 코드",btn("수정",{small:true})]]))}
+      ${card("shield-check","권한 관리", table(["역할","권한범위"], [["시스템 관리자","전체"],["S&LB 업무담당","S&LB 메뉴"],["DIP 금융담당","DIP 메뉴"]]))}
     </div>
-  `)}
+    ${card("alert-circle","에러 / 시스템 로그 관리 (클릭 시 상세)", table(["발생시각","구분","내용","상태"], SYS_LOGS.map(l=>[l.time,l.type,l.content,statusPill(l.status,l.tone)]), (i)=>`/014/${SYS_LOGS[i].id}`))}
+  `);
+};
 
-  ${card("table-2","전체 매핑 매트릭스", `
-    ${table(["FO","화면명","연계 BO 요건번호","비고"], [
-      ["021","자문기관 의뢰관리", "BO-012 · BO-026 " + fBadge("gap"), "RFP 원문 연계코드 미표기 — 개념 대응"],
-      ["022","펀드운용사 일반(명세관리)", "BO-014 · BO-016 · BO-018", "펀드/투자포트폴리오/운용사 3계열 통합"],
-      ["023","투자심사 보고", "BO-017", "1:1 완전 대응"],
-      ["024","총회/이사회 보고", "BO-019 · BO-038", "자펀드+선박펀드 총회 통합"],
-      ["025","보고사항 보고", "BO-020 · BO-039", "선박펀드 용선사 모니터링 포함"],
-      ["026","공문 보고", "BO-021 · BO-040", "1:1 완전 대응"],
-      ["027","출자금 납입요청 등", "BO-015 · BO-032 · BO-034", "자동계산·인출선행조건·사전알람"],
-      ["028","투자실적 검증 등 보고", "BO-022", "1:1 대응 + 컴플라이언스 확장"],
-      ["029","선박펀드 기타보고", "BO-024·026·028·030·031·032·037·041·042·043", "5개 카드에 10개 BO 요건 세분 반영"],
-      ["030","온라인 출자사업 신청", "BO-013 (LP측 BO-023 재인용)", "심사 단계별 진행현황 확장"],
-      ["031","수탁기관 운용지시서 관리", "BO-010", "운용지시 10종 유형 반영"],
-      ["032","수탁기관 정보대사 관리", "BO-010", "대사주기 필터 확장"],
-    ])}
-  `)}
+RENDERERS["015"] = (detailId) => {
+  if (detailId) {
+    const r = RESERVATIONS.find(x=>x.id===detailId) || RESERVATIONS[0];
+    return shell("관리자 · 상담예약 관리", `
+      ${backBar("/015","상담예약 목록")}
+      ${scrHeader("SFR-온기업-015","상담예약 상세","ONC-SCR-015-D")}
+      ${card("calendar","예약 정보", infoGrid([["기업명",r.company],["방식",r.mode],["희망일시",r.date],["관심업무",r.topic]]))}
+      ${card("clipboard-list","신청 메모", `<p class="text-[13px] text-gray-700">${r.memo}</p>`)}
+      ${card("user","담당자 배정 및 처리", `<div class="grid grid-cols-2 gap-4 mb-3">${field("담당자 배정",false,sel(["미배정","박담당","이담당"]))}${field("일정 변경",false,inp("",'type="datetime-local"'))}</div>
+        <div class="flex gap-2">${btn("승인",{primary:true, icon:"check-circle-2"})}${btn("거절",{icon:"x"})}</div>`)}
+    `);
+  }
+  return shell("관리자 · 상담예약 관리", `
+    ${scrHeader("SFR-온기업-015","[온기업-관리자] 상담예약 관리","ONC-SCR-015","온라인/오프라인 신청 통합 · 승인/거절/일정변경")}
+    ${card("calendar","상담예약 현황 (클릭 시 상세 · 필터: 기업명/관심업무)", `<div class="flex gap-2 mb-3">${inp("기업명 검색","class='w-48 border border-gray-300 rounded-md px-3 py-2 text-[13px]'")}${sel(["전체 업무","S&LB"],"class='w-40 border border-gray-300 rounded-md px-3 py-2 text-[13px] bg-white'")}${btn("조회",{small:true, icon:"search"})}</div>
+      ${table(["기업명","방식","일정","관심업무","상태"], RESERVATIONS.map(r=>[r.company,r.mode,r.date,r.topic,statusPill(r.status,"amber")]), (i)=>`/015/${RESERVATIONS[i].id}`)}`)}
+  `);
+};
 
-  ${gapBox("SFR-온기업-021은 022~032와 달리 원문에 <code>※ [SFR-펀드관리-0xx] 요구사항과 연계</code> 문구가 없습니다. 개념상 BO-012 자문기관 관리, BO-026 외부평가 관리와 대응되지만 코드 확정을 위해 발주처 확인이 필요합니다. 029는 5개 카드에 10개 BO 요건이 얽혀 있어 필드 정합성 검토 우선순위가 가장 높습니다.", "디렉터 확인 필요 사항")}
-`;
+RENDERERS["016"] = (detailId) => {
+  if (detailId) {
+    const m = MEMBERS.find(x=>x.id===detailId) || MEMBERS[0];
+    return shell("관리자 · 회원 관리", `
+      ${backBar("/016","특수고객 목록")}
+      ${scrHeader("SFR-온기업-016", m.name + " 상세","ONC-SCR-016-D","통합고객관리 연동")}
+      ${card("building-2","기본정보", infoGrid([["유형",m.type],["법인등록번호",m.regno],["대표자",m.ceo],["연락처",m.contact],["업무기간",m.period],["상태",statusPill(m.status,m.tone)]]))}
+      <div class="flex gap-2 justify-end">${btn("비밀번호초기화",{small:true, icon:"refresh-cw"})}${btn("권한변경",{small:true, icon:"shield-check"})}${btn("승인처리",{primary:true, small:true, icon:"check-circle-2"})}</div>
+    `);
+  }
+  return shell("관리자 · 회원 관리", `
+    ${scrHeader("SFR-온기업-016","[온기업-관리자] 회원 관리","ONC-SCR-016","통합고객관리 기능 연동")}
+    ${tabs(["가입기업 관리","가입 투자자 관리","특수고객 관리"],"특수고객 관리")}
+    ${card("users","특수고객 현황 (클릭 시 상세)", table(["유형","기업명","법인번호","업무기간","상태"], MEMBERS.map(m=>[m.type,m.name,m.regno,m.period,statusPill(m.status,m.tone)]), (i)=>`/016/${MEMBERS[i].id}`), badge("통합고객관리 연동","blue"))}
+  `);
+};
 
-/* ---------------- 021. 자문기관 의뢰관리 ---------------- */
+RENDERERS["017"] = (detailId) => {
+  if (detailId) {
+    const c = CORP_CUSTOMERS.find(x=>x.id===detailId) || CORP_CUSTOMERS[0];
+    return shell("관리자 · 기업상담 관리", `
+      ${backBar("/017","기업고객통합정보")}
+      ${scrHeader("SFR-온기업-017", c.name + " 통합정보 상세","ONC-SCR-017-D")}
+      ${card("building-2","요약 정보", infoGrid([["상담이력수",c.consults],["신청사업수",c.applications],["최근 접촉일",c.lastContact]]))}
+      ${card("clock","상담 이력", c.history.map(h=>`<p class="text-[13px] text-gray-700 py-1.5 border-b last:border-0">${h}</p>`).join(""))}
+    `);
+  }
+  return shell("관리자 · 기업상담 관리", `
+    ${scrHeader("SFR-온기업-017","[온기업-관리자] 기업상담 관리","ONC-SCR-017","[SFR-일반-005] 기업고객통합정보 현황 조회 참고")}
+    ${card("building-2","기업고객통합정보 현황 (클릭 시 상세)", table(["법인명","상담이력수","신청사업수","최근 접촉일"], CORP_CUSTOMERS.map(c=>[c.name,c.consults,c.applications,c.lastContact]), (i)=>`/017/${CORP_CUSTOMERS[i].id}`))}
+    ${card("clipboard-list","상담 정보 등록 (대상기업/상담자/일자/형태/관심사업)", `<div class="grid grid-cols-2 gap-4">${field("대상기업",false,inp("법인명 검색"))}${field("상담 형태",false,sel(["유선","방문"]))}</div>${field("상담 내용",false,ta("",2))}${btn("담당자 배정 및 등록",{primary:true, small:true})}`)}
+  `);
+};
+
+RENDERERS["018"] = (detailId) => {
+  if (detailId) {
+    const a = ADMIN_APPLICATIONS.find(x=>x.id===detailId) || ADMIN_APPLICATIONS[0];
+    return shell("관리자 · 기업신청 관리", `
+      ${backBar("/018","신청 현황")}
+      ${scrHeader("SFR-온기업-018", a.company + " 신청 상세","ONC-SCR-018-D","ex. [SFR-금융지원-004] 신청-접수 관리 연동")}
+      ${card("file-check-2","심사 진행 단계", timeline(["접수","사전검토","외부평가","심의","계약"], a.stage))}
+      ${card("building-2","신청 정보", infoGrid([["프로그램",a.program],["접수일",a.date],["담당자",a.officer],["현재상태",statusPill(a.status,a.tone)]]))}
+      ${card("paperclip","제출서류", a.docs.map(d=>`<div class="flex items-center justify-between border rounded-lg p-2.5 mb-2 last:mb-0 text-[12px]">
+        <div class="flex items-center gap-2">${ic("file-text","w-[14px] h-[14px]")}${d}</div>${btn("다운로드",{small:true, icon:"download"})}
+      </div>`).join(""))}
+      <div class="flex justify-end gap-2">${btn("반려",{icon:"x"})}${btn("다음 단계 승인",{primary:true, icon:"check-circle-2"})}</div>
+    `);
+  }
+  return shell("관리자 · 기업신청 관리", `
+    ${scrHeader("SFR-온기업-018","[온기업-관리자] 기업신청 관리","ONC-SCR-018","ex. [SFR-금융지원-004] 신청-접수 관리 연동")}
+    ${card("clipboard-list","기업지원프로그램 신청 현황 (클릭 시 상세)", table(["신청기업","프로그램","접수일","진행상태","담당자"], ADMIN_APPLICATIONS.map(a=>[a.company,a.program,a.date,statusPill(a.status,a.tone),a.officer]), (i)=>`/018/${ADMIN_APPLICATIONS[i].id}`))}
+    ${card("wallet","투자자매칭 신청 관리", table(["기업명","업무진행상태","IR 진행"], [["(주)ABC",statusPill("정보공개","blue"),"2026-06-25 예정"]]))}
+  `);
+};
+
+RENDERERS["019"] = () => shell("관리자 · 보고서 관리", `
+  ${scrHeader("SFR-온기업-019","[온기업-관리자] 보고서 관리","ONC-SCR-019")}
+  <div class="grid grid-cols-3 gap-3 mb-4">
+    ${[["누적 기업회원","1,204"],["신규 상담(월)","86"],["사업 신청건","312"]].map(([l,v])=>`<div class="bg-white border rounded-xl p-4"><p class="text-[12px] text-gray-500">${l}</p><p class="text-[22px] font-medium mt-1">${v}</p></div>`).join("")}
+  </div>
+  ${card("bar-chart-3","기업회원 명세/통계 (연도별·지역별·상태별)", `<div class="h-40 bg-gray-50 rounded-lg flex items-end gap-3 p-4">
+    ${[40,65,50,80,55,70].map(h=>`<div class="flex-1 rounded-t" style="height:${h}%;background:${NAVY}"></div>`).join("")}
+  </div>`)}
+  <div class="flex justify-end">${btn("통계 출력",{icon:"file-text"})}</div>
+`);
+
+RENDERERS["020"] = (detailId) => {
+  const kd = KODATA_LIST.find(x=>x.id===detailId);
+  const ds = DISTRESS_LIST.find(x=>x.id===detailId);
+  if (kd) {
+    return shell("관리자 · 기타 관리", `
+      ${backBar("/020","KODATA 회생기업")}
+      ${scrHeader("SFR-온기업-020", kd.name + " 회생기업 상세","ONC-SCR-020-D")}
+      ${card("landmark","정보", infoGrid([["법원",kd.court],["단계",kd.stage],["K-Score",statusPill(kd.score,kd.tone)]]))}
+      ${card("clipboard-list","상세 내용", `<p class="text-[13px] text-gray-700">${kd.detail}</p>`)}
+    `);
+  }
+  if (ds) {
+    return shell("관리자 · 기타 관리", `
+      ${backBar("/020","부실징후기업 모니터링")}
+      ${scrHeader("SFR-온기업-020", ds.name + " 부실징후 판정 상세","ONC-SCR-020-D")}
+      ${card("gavel","정보", infoGrid([["조회연도",ds.year],["판정",statusPill(ds.verdict,ds.tone)]]))}
+      ${card("clipboard-list","상세 내용", `<p class="text-[13px] text-gray-700">${ds.detail}</p>`)}
+    `);
+  }
+  return shell("관리자 · 기타 관리", `
+    ${scrHeader("SFR-온기업-020","[온기업-관리자] 기타 관리","ONC-SCR-020","동산금융 · KODATA 회생기업 · 부실징후(K-Score) · 국유증권")}
+    <div class="grid grid-cols-2 gap-4">
+      ${card("landmark","한국평가데이터(KODATA) 회생기업 자료 (클릭 시 상세)", table(["기업명","법원","단계","K-Score"], KODATA_LIST.map(k=>[k.name,k.court,k.stage,statusPill(k.score,k.tone)]), (i)=>`/020/${KODATA_LIST[i].id}`))}
+      ${card("gavel","부실징후기업 모니터링 (클릭 시 상세)", table(["기업명","조회연도","판정"], DISTRESS_LIST.map(d=>[d.name,d.year,statusPill(d.verdict,d.tone)]), (i)=>`/020/${DISTRESS_LIST[i].id}`))}
+    </div>
+    ${card("upload","동산매각정보 업로드 (엑셀 기반)", `<div class="border-2 border-dashed rounded-lg p-4 text-center text-[12px] text-gray-500">입찰/낙찰/평가 구분 엑셀 파일 업로드</div>`)}
+  `);
+};
+
 RENDERERS["021"] = (detailId) => {
   if (detailId) {
     const r = REQUESTS.find(x=>x.id===detailId) || REQUESTS[0];
@@ -300,41 +999,20 @@ RENDERERS["021"] = (detailId) => {
       ${scrHeader("SFR-온기업-021", r.title,"ONC-SCR-021-D")}
       ${card("clipboard-list","의뢰 정보", infoGrid([["대상사업",r.program],["의뢰일",r.date],["담당자",r.officer],["의뢰유형",r.reqtype]]))}
       ${card("file-text","의뢰 내용", `<p class="text-[13px] text-gray-700">${r.content}</p>`)}
-      ${card("send","결과 보고 등록 (사업별 커스텀 항목)"+fBadge("ext"), `
-        <p class="text-[11.5px] text-gray-500 mb-3">보고서 등록형(첨부파일)과 항목 작성형(수치·내용 입력) 중 사업 유형에 맞춰 선택 — BO-012 원문 "결과보고는 단순 보고서 등록과 항목별 수치입력으로 구분" 반영</p>
-        <div class="border-2 border-dashed rounded-lg p-5 text-center bg-gray-50 mb-3">${ic("upload","w-5 h-5 mx-auto mb-2")}<p class="text-[13px]">결과보고서 파일 등록</p></div>
+      ${card("send","결과 보고 등록", `<div class="border-2 border-dashed rounded-lg p-5 text-center bg-gray-50 mb-3">${ic("upload","w-5 h-5 mx-auto mb-2")}<p class="text-[13px]">결과보고서 파일 등록</p></div>
         ${field("비용 청구 금액",false,inp("0"))}${btn("결과 전송",{primary:true, icon:"send"})}`)}
     `, "특수창구");
   }
   return shell("자문기관 · 의뢰관리", `
     ${ipNotice()}
-    ${scrHeader("SFR-온기업-021","[특수] 자문기관 - 의뢰관리","ONC-SCR-021","회계법인/감정평가법인/법무법인/건물관리기관(S&LB)/컨설팅기관(DIP) 등 대상")}
+    ${scrHeader("SFR-온기업-021","[특수] 자문기관 - 의뢰관리","ONC-SCR-021","회계법인/감정평가법인/법무법인/S&LB/DIP 등 대상")}
     ${boLink(["SFR-펀드관리-012(확인필요)","SFR-펀드관리-026(확인필요)"], "· RFP 원문에 연계코드 명시 없음 — 자문기관/외부평가 관리 항목과 개념 대응")}
-
-    ${card("users","자문기관 pool 관리"+fBadge("ext"), `<div class="grid grid-cols-5 gap-2 text-[11.5px] text-center">
-      ${["회계법인","감정평가법인","법무법인","건물관리기관(S&LB)","컨설팅기관(DIP)"].map(t=>`<div class="border rounded-md py-2.5 text-gray-600">${t}</div>`).join("")}
-    </div><p class="text-[11px] text-gray-400 mt-2">대상 자문기관은 공사와 연 단위 계약 등을 통해 주기적으로 자문·관리 용역을 수행 — BO-012 자문기관 pool 연동, BO-026 외부자문기관 pool 관리 연동</p>`)}
-
     ${card("clipboard-list","의뢰 조회 (클릭 시 상세)", table(["대상사업","일자","담당자","의뢰유형","의뢰제목","상태"], REQUESTS.map(r=>[r.program,r.date,r.officer,r.reqtype,r.title,statusPill(r.status,r.tone)]), (i)=>`/021/${REQUESTS[i].id}`))}
-
-    ${card("send","자료 송수신 및 소통", `<div class="grid grid-cols-2 gap-3 text-[12px]">
-      <div class="border rounded-lg p-3"><p class="font-medium text-gray-700 mb-1">요청 자료 현황 조회</p><p class="text-gray-400 text-[11px]">공사 ↔ 자문기관 양방향 조회</p></div>
-      <div class="border rounded-lg p-3"><p class="font-medium text-gray-700 mb-1">자료 입력 및 등록</p><p class="text-gray-400 text-[11px]">전송 진행상태 확인(전송/접수/확정)</p></div>
-    </div>`)}
-
     ${card("history","이력 관리 (의뢰·송수신·소통·결과보고·비용청구·지급)"+fBadge("gap"), `<p class="text-[12px] text-gray-500">의뢰~지급까지 통합 이력 테이블. BO 원문에 별도 통합 이력 스키마가 명시되어 있지 않아 신설 여부 확인 필요.</p>`)}
-
-    ${card("table-2","필드 매핑 상세", fieldMapTable([
-      ["대상사업/일자/담당자/의뢰유형/의뢰제목/상태","외부평가 대상 조회·등록 / 외부자문기관 pool 관리 연동 / 외부평가 의뢰","BO-012, BO-026","자문기관 마스터 선등록 필요"],
-      ["자료 송수신 및 소통(첨부파일)","외부평가 자료 송수신","BO-026","전송상태값 정의 필요"],
-      ["결과 보고(수치·내용 입력, 첨부파일)","외부평가 결과 확인·등록","BO-012, BO-026","사업별 항목 가변 스키마"],
-      ["비용 청구","외부평가 자문비용 지급","BO-026","지급 승인/이력은 BO 전용"],
-      ["이력 관리","(BO 원문에 통합 이력 테이블 명시 없음)"+fBadge("gap"),"-","BO 신설 여부 확인 요망"],
-    ]))}
+    ${gapBox("자문기관 마스터(회계법인/감정평가법인/법무법인/건물관리기관(S&amp;LB)/컨설팅기관(DIP))는 BO에서 pool로 선등록되어야 하며, 결과보고 항목은 사업별 수요에 따라 가변 구성됩니다 — 항목 커스터마이즈 UI 필요.")}
   `, "특수창구");
 };
 
-/* ---------------- 022. 펀드운용사 일반(명세관리) ---------------- */
 RENDERERS["022"] = (detailId) => {
   if (detailId) {
     const f = FUND_ITEMS.find(x=>x.id===detailId) || FUND_ITEMS[0];
@@ -347,312 +1025,118 @@ RENDERERS["022"] = (detailId) => {
   }
   return shell("펀드 운용사 일반", `
     ${ipNotice()}
-    ${scrHeader("SFR-온기업-022","[특수] 펀드 운용사 일반 (명세 관리)","ONC-SCR-022","운용사 작성 → 운용사 전송 → 공사 확인 → 승인 · 전송 이후 수정 불가")}
-    ${boLink(["SFR-펀드관리-014","SFR-펀드관리-016","SFR-펀드관리-018"], "· LP(투자자)측 동일요건은 BO-023에서 재인용")}
-
-    ${card("landmark","① 운용사 관리", `<div class="grid grid-cols-2 gap-4">
-        ${subCard("info","기본정보", `${field("운용사명",false,inp("○○자산운용"))}${field("법인구분",false,sel(["기업구조혁신펀드 자펀드 운용사","기업지원펀드 위탁운용사","캠코선박운용(주)"]))}${field("제재 및 조치사항",false,inp(""))}${field("메모",false,ta("",2))}`)}
-        ${subCard("users","핵심운용인력 현황"+fBadge("new"), table(["성명","업력","학력","경력","제재사항"],[["김운용","12년","MBA","VC 심사역 8년","-"]]))}
-      </div>
-      ${subCard("history","펀드이력정보"+fBadge("new"), `<p class="text-[11.5px] text-gray-500">사전·신청·심사·선정·결성·해산 등 관련펀드 일체를 상태별(진행중/심사탈락/선정후미결성/운용중/청산 등)로 구분 조회</p>`)}
-    `)}
-
-    ${card("wallet","② 펀드 관리", `<div class="grid grid-cols-4 gap-3 mb-3">
-        ${field("설정일",false,inp("",'type="date"'))}${field("만기일",false,inp("",'type="date"'))}${field("투자기간",false,inp("5년"))}${field("펀드규모",false,inp("300억원"))}
-        ${field("약정액",false,inp("0"))}${field("집행액",false,inp("0"))}${field("상태",false,sel(["결성","운용중","청산"]))}${field("사후적 매칭현황"+fBadge("new"),false,inp("멀티클로징 2차"))}
-      </div>
-      <div class="grid grid-cols-2 gap-4">
-        ${subCard("landmark","운용사/회계감사인/수탁기관/사무관리회사"+fBadge("new"), `${field("회계감사인",false,inp("○○회계법인"))}${field("수탁기관",false,inp("○○은행"))}${field("사무관리회사",false,inp("-"))}`)}
-        ${subCard("percent","보수정보"+fBadge("new"), `${field("관리보수",false,inp("연 2.0%"))}${field("성과보수",false,inp("초과수익의 20%"))}`)}
-      </div>
-      ${field("계좌정보"+fBadge("new"),false,inp("수탁 123-456-789012"))}
-      ${subCard("users","출자자(LP) 관리"+fBadge("new"), table(["출자자명","계좌정보","담당자","약정액","약정비율","종구분","순위구분","출자비율"],[["공사","수탁 111-111","박담당","1,800,000,000원","60%","우선순위","1순위","60%"],["민간출자자","수탁 222-222","-","1,200,000,000원","40%","후순위","2순위","40%"]]))}
-    `)}
-
-    ${card("ship","③ 투자포트폴리오 관리", `
-      ${subCard("building-2","기본정보(기업/부동산/채권/프로젝트, SPC여부)"+fBadge("new"), `<div class="grid grid-cols-3 gap-3">${field("유형",false,sel(["기업","부동산","채권","프로젝트"]))}${field("SPC 경유 여부",false,sel(["해당없음","SPC 경유"]))}${field("법인번호/사업자번호",false,inp(""))}</div>${field("대표자/설립일자/주소/주요제품/기업규모/주주정보",false,inp("텍스트 입력"))}${field("지원일/지원금액/지원조건 요약/특이사항",false,ta("",2))}`)}
-      ${subCard("bar-chart","투자/회수 현황 및 재무정보"+fBadge("new"), `${table(["투자대상","투자일","투자금액","회수금액","투자잔액","투자상태"],[["B기업","2025-11-01","2,000,000,000원","-","2,000,000,000원","투자"]])}`)}
-      ${subCard("ship","선박펀드 특화 정보(선박정보·환경규제)"+fBadge("new"), `<div class="grid grid-cols-3 gap-3">${field("선명/선종/규격",false,inp(""))}${field("환경규제 등급 및 충족여부",false,sel(["EEDI 충족","EEDI 미충족"]))}${field("운항정보/조선소/선급",false,inp(""))}</div>${field("운항항로(Excel 업로드)",false,`<div class="border-2 border-dashed rounded-md py-4 text-center text-[11.5px] text-gray-500">엑셀 업로드</div>`)}${field("선박 보험·담보 현황",false,inp(""))}`)}
-      ${subCard("paperclip","서류 총괄 관리"+fBadge("new"), checklist(["결성 서류","운용 서류","투자기업 관련 서류","필수 서류 구분"]))}
-    `)}
-
+    ${scrHeader("SFR-온기업-022","[특수] 펀드 운용사 일반 (명세 관리)","ONC-SCR-022","운용사 작성 → 전송 → 공사확인 → 승인 절차")}
+    ${boLink(["SFR-펀드관리-014","SFR-펀드관리-016","SFR-펀드관리-018"])}
+    <div class="grid grid-cols-3 gap-4 mb-4">
+      ${card("landmark","운용사 관리", `<p class="text-[12px] text-gray-500 mb-1.5">기본정보 · 인력현황 조회/등록</p>
+        <p class="text-[11px] text-gray-400">핵심운용인력(업력·학력·경력·제재사항)${fBadge("new")}<br>펀드이력정보(신청~해산 전 이력, 상태별 구분)${fBadge("new")}</p>`)}
+      ${card("wallet","펀드 관리", `<p class="text-[12px] text-gray-500 mb-1.5">설정일·만기일·투자기간·펀드규모·약정액·집행액·상태</p>
+        <p class="text-[11px] text-gray-400">회계감사인/수탁기관/사무관리회사${fBadge("new")}<br>보수정보(관리보수·성과보수)${fBadge("new")}<br>출자자(LP) 정보: 약정비율·종구분·순위구분·출자/분배 누계${fBadge("new")}</p>`)}
+      ${card("ship","투자포트폴리오 관리", `<p class="text-[12px] text-gray-500 mb-1.5">유형별(기업/부동산/채권/프로젝트) 기본정보 · 투자·회수현황 · 재무정보(BS/PL)</p>
+        <p class="text-[11px] text-gray-400">선박펀드: 선명·선종·규격·환경규제등급·운항정보·조선소·운항항로(Excel업로드)·선급·보험담보현황${fBadge("new")}</p>`)}
+    </div>
     ${card("refresh-cw","진행상태 확인 (클릭 시 상세)", table(["항목","입력일","전송상태","공사 확인"], FUND_ITEMS.map(f=>[f.name,f.date,statusPill(f.sent,f.tone1),statusPill(f.confirmed,f.tone2)]), (i)=>`/022/${FUND_ITEMS[i].id}`))}
-
-    ${card("calendar-clock","일정 관리"+fBadge("new"), `<p class="text-[11.5px] text-gray-500">펀드 주요 일정(총회·심사·보고·공문)을 각 업무기능과 연계하여 통합 캘린더로 관리</p>`)}
-
     ${card("message-square","소통 관리 (운용사 ↔ 공사 게시판)"+fBadge("new"), `<div class="flex items-center justify-between border rounded-lg p-3 text-[12px]">
-        <span>전체 공지사항 · 펀드별 안내 등록</span><span class="text-gray-400">운용사 확인 일자·시간 표시</span>
+        <span>전체 공지사항 · 펀드별 안내 등록</span><span class="text-gray-400">확인 일자·시간 표시</span>
       </div>`)}
-
-    ${card("table-2","필드 매핑 상세", fieldMapTable([
-      ["운용사 관리 — 기본정보·인력현황","핵심운용인력(업력,학력,경력,제재사항) / 펀드이력정보(신청~해산 일체, 상태별 구분)","BO-018","운용사 마스터는 캠코선박운용(주) 예외 처리(BO-044)"],
-      ["펀드 관리 — 기본정보·출자자현황·재무제표","설정일,만기일,투자기간,펀드규모,약정액,집행액,상태/운용사,운용인력/회계감사인·수탁기관·사무관리회사/보수정보/계좌정보/출자자(LP)정보","BO-014","필드명까지 완전 동일 — 스키마 그대로 재사용 가능"],
-      ["투자포트폴리오 — 기본정보·재무정보","유형별(기업/부동산/채권/프로젝트) 필요정보, SPC여부/법인정보/투자·회수현황/재무정보(BS/PL)","BO-016","SPC 경유 투자 시 SPC+기업정보 동시관리"],
-      ["투자포트폴리오 — 선박특화(선박정보·환경규제)","선명,선종,규격,환경규제등급,운항정보,조선소/운항항로(Excel)/선급/보험담보현황","BO-035","선박펀드 전용 서브폼 분기"],
-      ["일정 관리(총회,투심,보고,공문)","각 업무기능과 연계하여 관리","BO-019~021, BO-017","단일 캘린더 UI로 통합 노출 권장"],
-      ["소통(게시판)","펀드 운용사-공사 소통 게시판 / 확인 일자·시간 표시","BO-022","읽음 확인 타임스탬프 필드 필수"],
-    ]))}
+    ${gapBox("BO-014 필드(설정일·만기일·투자기간·펀드규모·약정액·집행액·상태 등)는 명칭까지 완전 동일하므로 입력폼 스키마를 그대로 재사용 가능합니다. 다만 캠코선박운용(주)은 운용사 마스터에서 예외 처리가 필요합니다(SFR-펀드관리-044 별도 관리).")}
   `, "특수창구");
 };
 
-/* ---------------- 023. 투자심사 보고 ---------------- */
-RENDERERS["023"] = (detailId) => {
-  if (detailId) {
-    const item = R023.find(x=>x.id===detailId) || R023[0];
-    return shell("투자심사 보고", `
-      ${backBar("/023","투자심사 이력")}
-      ${scrHeader("SFR-온기업-023", item.title,"ONC-SCR-023-D")}
-      ${card("file-check-2","투자심사 정보", infoGrid(item.info))}
-      ${card("refresh-cw","진행상태", timeline(["작성","전송","공사 접수","확정"], item.stage))}
-      ${card("clipboard-list","심사 내용", `<p class="text-[13px] text-gray-700 leading-relaxed">${item.content}</p>`)}
-      ${card("paperclip","첨부서류 세트(BO-017 기준 5종)"+fBadge("ext"), `<div class="grid grid-cols-2 gap-2">${["투심보고서","준법감시보고서","체크리스트","주주명부","ESG 평가보고서"].map(d=>`<div class="flex items-center justify-between border rounded-lg p-2.5 text-[12px]"><span class="flex items-center gap-2">${ic("file-text","w-[14px] h-[14px]")}${d}</span>${btn("다운로드",{small:true, icon:"download"})}</div>`).join("")}</div>`)}
-      <div class="flex justify-end gap-2">${btn("수정",{})}${btn("재전송",{primary:true, icon:"send"})}</div>
-    `, "특수창구");
-  }
-  return shell("투자심사 보고", `
-    ${ipNotice()}
-    ${scrHeader("SFR-온기업-023","[특수] 펀드 운용사 - 투자심사 보고","ONC-SCR-023","자펀드의 투자심사 내역 조회(자펀드 보고시스템 연동)")}
-    ${boLink(["SFR-펀드관리-017"])}
-    ${card("clock","최근 투자심사 이력 (클릭 시 상세)", table(["투자심사일","투자유형","투자금액","진행상태"], R023.map(d=>d.row), (i)=>`/023/${R023[i].id}`))}
-    ${card("file-check-2","투자심사 신규 등록", `<div class="grid grid-cols-2 gap-4">
-        ${field("펀드구분",false,sel(["기업지원펀드"]))}${field("투자심사일",false,inp("",'type="date"'))}
-        ${field("투자유형",false,sel(["신주","구주"]))}${field("투자금액",false,inp("0"))}
-        ${field("취득주식수"+fBadge("new"),false,inp("0"))}${field("취득가"+fBadge("new"),false,inp("0"))}
-        ${field("지분율"+fBadge("new"),false,inp("0%"))}${field("규약준수여부"+fBadge("new"),false,sel(["준수","미준수","해당없음"]))}
-      </div>
-      ${field("투자심사 진행상태",false,sel(["진행 중","완료"]))}
-      ${field("특이사항",false,ta("",2))}
-      ${field("첨부서류"+fBadge("new"),false,`<div class="grid grid-cols-3 gap-2">${["투자계약서","투심보고서","준법감시보고서","체크리스트","주주명부","ESG 평가보고서"].map(d=>`<div class="border-2 border-dashed rounded-md px-3 py-2 text-[11px] text-gray-500 text-center">${d}</div>`).join("")}</div>`,"BO-017 기준 5종 문서 세트 — FO는 기존 투자계약서 단일 첨부만 정의되어 있어 다중 업로드로 확장")}
-      ${field("공사 의견 확인",false,ta("",2))}
-      <div class="flex justify-end">${btn("투자계약서 등록 및 전송",{primary:true, icon:"send"})}</div>`)}
-    ${card("table-2","필드 매핑 상세", fieldMapTable([
-      ["펀드구분/투자심사일/진행상태","투자포트폴리오 정보, 투자심사일, 진행상태(진행중/완료)","BO-017","완전 일치"],
-      ["투자유형(신주/구주)/투자금액","투심위 정보, 투자상세(신주/구주,투자금액,취득주식수,취득가,지분율 등)","BO-017","FO는 요약, BO는 상세 세분화 — 필드 추가"],
-      ["특이사항","규약준수여부, 특이사항","BO-017","규약준수여부 체크박스 추가 권장"],
-      ["투자계약서 등록","첨부파일(투심보고서,준법감시보고서,체크리스트,주주명부,ESG평가보고서)","BO-017","단일→다중 첨부로 확장 필요"],
-      ["공사 의견 등 확인","공사 의견 등 제출 포함","BO-017","완전 일치"],
-    ]))}
-  `, "특수창구");
-};
+function reportScreen(id, data, cols, sfr, label, formBody, boCodes, gapHtml) {
+  return (detailId) => {
+    if (detailId) {
+      const item = data.find(x=>x.id===detailId) || data[0];
+      return shell(label, reportDetail(item, id, sfr, label, label + " 이력"), "특수창구");
+    }
+    return shell(label, `${ipNotice()}${scrHeaderFor(id,sfr,label)}${boCodes ? boLink(boCodes) : ""}${reportHistory(data, id, cols)}${formBody}${gapHtml ? gapBox(gapHtml) : ""}`, "특수창구");
+  };
+}
+function scrHeaderFor(id, sfr, label) {
+  const notes = {
+    "023":"[SFR-펀드관리-017] 연계", "024":"정관 총회 항목 체크리스트 관리",
+    "025":"선박펀드: 용선사 재무현황·질권·담보비율 등 모니터링 포함", "026":"",
+    "028":"[SFR-펀드관리-022] 연계 · 공사-운용사-수탁기관 정보대사",
+    "029":"해운사 상담 / 선박투자회사 설립 / 정기수리검사 / 만기·조기상환 / 채무불이행",
+    "031":"[SFR-펀드관리-010] 연계",
+  };
+  const fullName = "[특수] 펀드 운용사 - " + label;
+  return scrHeader(sfr, fullName, "ONC-SCR-"+id, notes[id]);
+}
 
-/* ---------------- 024. 총회/이사회 보고 ---------------- */
-RENDERERS["024"] = (detailId) => {
-  if (detailId) {
-    const item = R024.find(x=>x.id===detailId) || R024[0];
-    return shell("총회/이사회 보고", `
-      ${backBar("/024","총회/이사회 이력")}
-      ${scrHeader("SFR-온기업-024", item.title,"ONC-SCR-024-D")}
-      ${card("users","총회 정보", infoGrid(item.info))}
-      ${card("refresh-cw","진행상태", timeline(["작성","전송","공사 접수","확정"], item.stage))}
-      ${card("clipboard-list","총회 내용", `<p class="text-[13px] text-gray-700 leading-relaxed">${item.content}</p>`)}
-    `, "특수창구");
-  }
-  return shell("총회/이사회 보고", `
-    ${ipNotice()}
-    ${scrHeader("SFR-온기업-024","[특수] 펀드 운용사 - 총회/이사회 보고","ONC-SCR-024","정관 총회 항목 체크리스트 관리")}
-    ${boLink(["SFR-펀드관리-019","SFR-펀드관리-038"], "· 선박펀드는 세부요건 동일(이사회 포함)")}
-    ${card("clock","최근 총회/이사회 이력 (클릭 시 상세)", table(["총회종류","결의방법","총회일","결과"], R024.map(d=>d.row), (i)=>`/024/${R024[i].id}`))}
-    ${card("users","총회/이사회 신규 등록", `<div class="grid grid-cols-2 gap-4">
-        ${field("총회종류",false,sel(["정기총회","임시총회","이사회"]))}${field("결의방법",false,sel(["서면결의","출석결의"]))}
-      </div>${field("총회 내용",false,ta("",2))}
-      <p class="text-[12px] font-medium mb-2">정관 총회 체크리스트</p>${checklist(["예산안 승인 여부","결산 보고 여부","임원 선임 안건 여부"])}
-      ${field("의결권 행사 및 결과 확인"+fBadge("new"),false,`<label class="flex items-center gap-1.5 text-[13px] text-gray-700"><input type="checkbox" class="rounded border-gray-300"/>공사 직인 요청 연동</label>`,"BO-019 원문에만 존재 — FO 화면에 누락되어 있던 항목")}
-      <div class="flex justify-end">${btn("총회 결과 등록 및 전송",{primary:true, icon:"send"})}</div>`)}
-    ${card("table-2","필드 매핑 상세", fieldMapTable([
-      ["총회종류/결의방법","펀드구분,총회종류,총회일자,결의형태,결의방법,총회제목","BO-019, BO-038","완전 일치"],
-      ["총회 내용","총회내용, 첨부파일","BO-019","완전 일치"],
-      ["정관 총회 체크리스트","정관에 따른 총회 항목을 체크리스트 형식으로 관리","BO-019","체크리스트는 펀드(정관)별 가변 마스터 선행 필요"],
-      ["의결권 행사·결과 확인(신규)","총회 의결권 행사 및 결과 확인(필요시 공사 직인 요청 연동)","BO-019","FO 화면에 누락 — 직인요청 트리거 필드 추가"],
-    ]))}
-  `, "특수창구");
-};
+RENDERERS["023"] = reportScreen("023", R023, ["투자심사일","투자유형","투자금액"], "SFR-온기업-023", "투자심사 보고", card("file-check-2","투자심사 신규 등록", `<div class="grid grid-cols-2 gap-4">
+    ${field("펀드구분",false,sel(["기업지원펀드"]))}${field("투자심사일",false,inp("",'type="date"'))}${field("투자유형",false,sel(["신주","구주"]))}${field("투자금액",false,inp("0"))}
+    ${field("취득주식수"+fBadge("new"),false,inp("0"))}${field("취득가"+fBadge("new"),false,inp("0"))}${field("지분율"+fBadge("new"),false,inp("0%"))}${field("규약준수여부"+fBadge("new"),false,sel(["준수","미준수","해당없음"]))}
+  </div>${field("특이사항",false,ta("",2))}
+  ${field("첨부서류"+fBadge("new"),false,`<div class="grid grid-cols-2 gap-2">${["투자계약서","투심보고서","준법감시보고서","체크리스트","주주명부","ESG 평가보고서"].map(d=>`<div class="border-2 border-dashed rounded-md px-3 py-2 text-[11.5px] text-gray-500 text-center">${d}</div>`).join("")}</div>`,"BO-017 기준 5종 문서 세트 — FO는 현재 투자계약서 단일 첨부만 정의되어 있어 다중 업로드로 확장")}
+  ${field("공사 의견 확인",false,ta("",2))}
+  ${btn("투자계약서 등록 및 전송",{primary:true, icon:"send"})}`), ["SFR-펀드관리-017"]);
 
-/* ---------------- 025. 보고사항 보고 ---------------- */
-RENDERERS["025"] = (detailId) => {
-  if (detailId) {
-    const item = R025.find(x=>x.id===detailId) || R025[0];
-    return shell("보고사항 보고", `
-      ${backBar("/025","보고사항 이력")}
-      ${scrHeader("SFR-온기업-025", item.title,"ONC-SCR-025-D")}
-      ${card("file-text","보고 정보", infoGrid(item.info))}
-      ${card("refresh-cw","진행상태", timeline(["작성","전송","공사 접수","확정"], item.stage))}
-      ${card("clipboard-list","보고 내용", `<p class="text-[13px] text-gray-700 leading-relaxed">${item.content}</p>`)}
-    `, "특수창구");
-  }
-  return shell("보고사항 보고", `
-    ${ipNotice()}
-    ${scrHeader("SFR-온기업-025","[특수] 펀드 운용사 - 보고사항 보고","ONC-SCR-025","선박펀드: 용선사 재무현황·질권·담보비율 등 모니터링 포함")}
-    ${boLink(["SFR-펀드관리-020","SFR-펀드관리-039"])}
-    ${card("clock","최근 보고 이력 (클릭 시 상세)", table(["보고구분","기준분기","보고대상","제출일"], R025.map(d=>d.row), (i)=>`/025/${R025[i].id}`))}
-    ${card("file-text","정기/수시/기타 보고 신규 등록", `<div class="grid grid-cols-3 gap-4">
-        ${field("보고구분",false,sel(["정기","수시","기타"]))}${field("기준분기",false,sel(["2026 Q2"]))}${field("보고대상"+fBadge("new"),false,inp("출자자 전체"))}
-      </div>${field("보고제목",true,inp("2026년 2분기 정기보고"))}${field("보고내용",false,ta("",2))}
-      <p class="text-[12px] font-medium mb-2">선박펀드 모니터링 항목 (경영이행약정 연동)</p>${checklist(["용선사 재무현황","질권/후순위 저당권","담보비율","선박보험","주간/월간 해운시황"+fBadge("new")])}
-      <p class="text-[11px] text-gray-400 mt-2">계량항목(선박 담보비율, 해운시황 추이 등)은 통계목적으로 별도 관리 — BO-039 원문 명시</p>
-      <div class="flex justify-end mt-3">${btn("보고 등록 및 전송",{primary:true, icon:"send"})}</div>`)}
-    ${card("table-2","필드 매핑 상세", fieldMapTable([
-      ["보고구분(정기/수시/기타)","자펀드 정기/수시/기타 보고 관리","BO-020, BO-039","완전 일치"],
-      ["기준분기/보고대상/보고제목/보고내용","펀드구분,보고일자,기준분기,보고대상,보고제목,보고내용,첨부파일","BO-020","완전 일치"],
-      ["선박펀드 모니터링","경영이행약정 주요사항 모니터링(용선사 재무현황,선박 담보비율,주간/월간 해운시황) 체크리스트 관리, 계량항목 별도 통계","BO-039","[SFR-온기업-025] 원문에서 BO→FO 직접 역참조됨"],
-    ]))}
-  `, "특수창구");
-};
+RENDERERS["024"] = reportScreen("024", R024, ["총회종류","결의방법","총회일"], "SFR-온기업-024", "총회/이사회 보고", card("users","총회/이사회 신규 등록", `<div class="grid grid-cols-2 gap-4">
+    ${field("총회종류",false,sel(["정기총회","임시총회"]))}${field("결의방법",false,sel(["서면결의","출석결의"]))}
+  </div>${field("총회 내용",false,ta("",2))}<p class="text-[12px] font-medium mb-2">정관 총회 체크리스트</p>${checklist(["예산안 승인 여부","결산 보고 여부","임원 선임 안건 여부"])}
+  ${field("의결권 행사 및 결과 확인"+fBadge("new"),false,`<div class="flex items-center gap-3"><label class="flex items-center gap-1.5 text-[13px] text-gray-700"><input type="checkbox" class="rounded border-gray-300"/>공사 직인 요청 연동</label></div>`,"BO-019 원문에만 존재 — FO 화면에 누락되어 있던 항목")}`), ["SFR-펀드관리-019","SFR-펀드관리-038"]);
 
-/* ---------------- 026. 공문 보고 ---------------- */
-RENDERERS["026"] = (detailId) => {
-  if (detailId) {
-    const item = R026.find(x=>x.id===detailId) || R026[0];
-    return shell("공문 보고", `
-      ${backBar("/026","공문 이력")}
-      ${scrHeader("SFR-온기업-026", item.title,"ONC-SCR-026-D")}
-      ${card("mail","공문 정보", infoGrid(item.info))}
-      ${card("refresh-cw","진행상태", timeline(["작성","전송","공사 접수","확정"], item.stage))}
-    `, "특수창구");
-  }
-  return shell("공문 보고", `
-    ${ipNotice()}
-    ${scrHeader("SFR-온기업-026","[특수] 펀드 운용사 - 공문 보고","ONC-SCR-026")}
-    ${boLink(["SFR-펀드관리-021","SFR-펀드관리-040"])}
-    ${card("clock","최근 공문 이력 (클릭 시 상세)", table(["공문종류","공문유형","공문일자","연계업무","처리현황"], R026.map(d=>d.row), (i)=>`/026/${R026[i].id}`))}
-    ${card("mail","공문 신규 등록 및 전송", `<div class="grid grid-cols-2 gap-4">
-        ${field("공문종류",false,sel(["수신","발신"]))}${field("공문유형",false,sel(["보고","총회","기타"]))}
-        ${field("공문일자",false,inp("",'type="date"'))}${field("처리현황",false,statusPill("접수","gray"))}
-        ${field("연계 업무"+fBadge("new"),false,sel(["없음","출자배분","보고","총회","기타"]),"공문이 특정 업무와 관련될 경우 해당 업무 화면과 상호 링크")}
-      </div>${field("공문제목",true,inp(""))}${field("공문내용",false,ta("",2))}<div class="border-2 border-dashed rounded-lg p-4 text-center text-[12px] text-gray-500">첨부파일 업로드</div>
-      <div class="flex justify-end mt-3">${btn("공문 등록 및 전송",{primary:true, icon:"send"})}</div>`)}
-    ${card("table-2","필드 매핑 상세", fieldMapTable([
-      ["펀드구분/공문종류/공문유형/공문일자/공문제목/공문내용/처리현황","동일 필드명(펀드구분,공문종류(수/발신),공문유형,공문일자,공문제목,공문내용,처리현황,첨부파일)","BO-021, BO-040","필드명 완전 일치(1:1)"],
-      ["특정 업무 연계(신규)","공문이 특정 업무와 관련될 경우 해당 업무와 연계 관리","BO-021","FO-023~025·027과 공문번호로 상호 참조"],
-    ]))}
-  `, "특수창구");
-};
+RENDERERS["025"] = reportScreen("025", R025, ["보고구분","기준분기","제출일"], "SFR-온기업-025", "보고사항 보고", card("file-text","정기/수시/기타 보고 신규 등록", `<div class="grid grid-cols-2 gap-4">
+    ${field("보고구분",false,sel(["정기","수시","기타"]))}${field("기준분기",false,sel(["2026 Q2"]))}${field("보고대상"+fBadge("new"),false,inp("출자자 전체"))}
+  </div>${field("보고제목",true,inp("2026년 2분기 정기보고"))}<p class="text-[12px] font-medium mb-2">선박펀드 모니터링 항목(경영이행약정 연동)</p>${checklist(["용선사 재무현황","질권/후순위 저당권","담보비율","선박보험","주간/월간 해운시황"])}`), ["SFR-펀드관리-020","SFR-펀드관리-039"]);
 
-/* ---------------- 027. 출자금 납입요청 등 ---------------- */
+RENDERERS["026"] = reportScreen("026", R026, ["공문종류","공문유형","공문일자","처리현황"], "SFR-온기업-026", "공문 보고", card("mail","공문 신규 등록 및 전송", `<div class="grid grid-cols-2 gap-4">
+    ${field("공문종류",false,sel(["수신","발신"]))}${field("공문유형",false,sel(["보고","총회","기타"]))}${field("공문일자",false,inp("",'type="date"'))}${field("처리현황",false,statusPill("접수","gray"))}
+    ${field("연계 업무"+fBadge("new"),false,sel(["없음","출자배분","보고","총회","기타"]),"공문이 특정 업무와 관련될 경우 해당 업무 화면과 상호 링크")}
+  </div>${field("공문제목",true,inp(""))}<div class="border-2 border-dashed rounded-lg p-4 text-center text-[12px] text-gray-500">첨부파일 업로드</div>`), ["SFR-펀드관리-021","SFR-펀드관리-040"]);
+
 RENDERERS["027"] = (detailId) => {
   if (detailId === "cap1") {
     return shell("출자금 납입요청", `
       ${backBar("/027","납입요청 목록")}
       ${scrHeader("SFR-온기업-027","1차 출자금 납입요청 상세","ONC-SCR-027-D")}
       ${card("wallet","납입 정보", infoGrid([["지정납입일","2026-07-01"],["총 금액","10,000,000,000원"],["납입계좌","국민은행 123-456-789012"]]))}
-      ${card("list-checks","출자자별 납입 내역"+fBadge("calc"), table(["출자자","출자비율","납입요청금액"], [["공사","60%","6,000,000,000원"],["민간출자자","40%","4,000,000,000원"]]))}
+      ${card("list-checks","출자자별 납입 내역", table(["출자자","출자비율","납입요청금액"], [["공사","60%","6,000,000,000원"],["민간출자자","40%","4,000,000,000원"]]))}
     `, "특수창구");
   }
   return shell("출자금 납입요청", `
     ${ipNotice()}
-    ${scrHeader("SFR-온기업-027","[특수] 펀드 운용사 - 출자금 납입요청 등","ONC-SCR-027","출자자별 금액 1차 자동계산(비율기반) · Excel 교차검증 파일 출력 지원")}
+    ${scrHeader("SFR-온기업-027","[특수] 펀드 운용사 - 출자금 납입요청 등","ONC-SCR-027","출자자별 금액 1차 자동계산(비율기반)")}
     ${boLink(["SFR-펀드관리-015","SFR-펀드관리-032","SFR-펀드관리-034"])}
-
-    ${card("shield-check","인출선행조건 점검"+fBadge("new"), `<p class="text-[11.5px] text-gray-500 mb-2">선박펀드 자금집행 전 필수 확인(BO-030/032) — 미충족 시 납입요청 진행 불가</p>${checklist(["회사결의서류 확인","외국환신고 완료","보험양도 완료"])}`)}
-
-    ${card("wallet","출자금 납입요청 정보 입력", `<div class="grid grid-cols-4 gap-4">
+    ${card("shield-check","인출선행조건 점검"+fBadge("new"), `<p class="text-[11.5px] text-gray-500 mb-2">선박펀드 자금집행 전 필수 확인(BO-032) — 미충족 시 납입요청 진행 불가</p>${checklist(["회사결의서류 확인","외국환신고 완료","보험양도 완료"])}`)}
+    ${card("wallet","출자금 납입요청 정보 입력", `<div class="grid grid-cols-2 gap-4">
         ${field("차수",false,inp("1차"))}${field("지정납입일",false,inp("",'type="date"'))}${field("총 금액",false,inp("0"))}${field("납입계좌",false,inp("계좌번호"))}
-      </div>${table(["출자자","출자비율","납입요청금액"+fBadge("calc")], [["공사","60%","6,000,000,000원"],["민간출자자","40%","4,000,000,000원"]], ()=>`/027/cap1`)}
-      <p class="text-[11px] text-gray-400 mt-2">출자자별 금액은 지분비율로 1차 자동계산(수정 가능) — Excel 교차검증 파일(수식 포함) 출력 기능 포함(BO-015)</p>
-      <div class="flex justify-end mt-3">${btn("출자금 납입요청 및 전송",{primary:true, icon:"send"})}</div>`)}
-
-    ${card("bell","분배금 지급통보 (분배일 사전 알람)", `<div class="flex items-center gap-2 bg-blue-50 rounded-md px-3 py-2 text-[12px] mb-3" style="color:#0C447C">${ic("bell","w-[14px] h-[14px]")}분배일 당일 해당 선박펀드에 사전 알람 팝업이 표시됩니다(BO-034).</div>
-      <div class="grid grid-cols-4 gap-4">${field("차수",false,inp("1차"))}${field("분배일",false,inp("",'type="date"'))}${field("총 금액",false,inp("0"))}${field("입금계좌",false,inp("계좌번호"))}</div>`)}
-
+      </div>${table(["출자자","출자비율","납입요청금액"+fBadge("calc")], [["공사","60%","6,000,000,000원"],["민간출자자","40%","4,000,000,000원"]], ()=>`/027/cap1`)}`)}
+    ${card("bell","분배금 지급통보 (분배일 사전 알람)", `<div class="flex items-center gap-2 bg-blue-50 rounded-md px-3 py-2 text-[12px]" style="color:#0C447C">${ic("bell","w-[14px] h-[14px]")}분배일 당일 해당 선박펀드에 사전 알람 팝업이 표시됩니다.</div>`)}
     ${card("calendar-days","출자배분요청계획 등록"+fBadge("new"), `<p class="text-[11.5px] text-gray-500 mb-2">연도별/월별/주차별 요청예정일·금액을 등록하면 BO에서 캐스케이딩 방식으로 자동 집계됩니다(BO-015 / BO-034)</p>
       ${table(["구분","요청예정일","금액","비고"], [["2026년 3분기","2026-09-01","5,000,000,000원","2차 출자 배분"]])}
       <div class="flex justify-end mt-3">${btn("계획 등록",{small:true, icon:"plus"})}</div>`)}
-
-    ${card("trending-up","펀드 IRR 등 관리"+fBadge("new"), `<p class="text-[11.5px] text-gray-500 mb-2">Gross IRR / Net IRR / MOIC — 펀드 전체 및 출자자별(BO-015/034)</p>
-      ${table(["구분","IRR","MOIC"], IRR_DATA)}`)}
-
-    ${card("database","펀드 잔고 관리"+fBadge("new"), `<p class="text-[11.5px] text-gray-500">기준가격, 좌수 변동 내역 조회(BO-015/034)</p>`)}
-
-    ${card("table-2","필드 매핑 상세", fieldMapTable([
-      ["출자금 납입요청 필드 일체","모펀드 출자/배분 현황(차수,일자,금액(총/출자자별)), 납입계좌, 출자금 입금 운용지시서 생성 연동","BO-015, BO-034","필드 완전 일치"],
-      ["출자자별 금액(자동계산)","지분비율 1차 자동계산(수정 가능), Excel 교차검증 파일(수식포함) 출력","BO-015","완전 일치"],
-      ["인출선행조건 확인(신규)","인출선행조건 충족여부 확인(회사결의서류,외국환신고,보험양도 등 체크리스트)","BO-030, BO-032(선박펀드 한정)","FO 화면 명세에 없던 조건 체크 UI — 선박펀드 납입시 필수"],
-      ["분배금 지급통보 사전알람","회수 당일 해당 선박펀드 사전 알람(통지,팝업)","BO-034","완전 일치(선박펀드 전용)"],
-      ["출자배분요청계획 등록","연도별/월별/주차별 요청예정일,금액,비고 — 캐스케이딩 집계","BO-015, BO-034","필드 완전 일치. 집계 로직은 BO 전용"],
-      ["IRR·잔고 관리(신규)","Gross/Net IRR, MOIC, 기준가격·좌수 변동 내역","BO-015, BO-034","FO 화면에 없던 재무지표 — 운용사 보고용으로 추가 권장"],
-    ]))}
   `, "특수창구");
 };
 
-/* ---------------- 028. 투자실적 검증 등 보고 ---------------- */
-RENDERERS["028"] = (detailId) => {
-  if (detailId) {
-    const item = R028.find(x=>x.id===detailId) || R028[0];
-    return shell("투자실적 검증", `
-      ${backBar("/028","검증 이력")}
-      ${scrHeader("SFR-온기업-028", item.title,"ONC-SCR-028-D")}
-      ${card("bar-chart-3","검증 정보", infoGrid(item.info))}
-      ${card("refresh-cw","진행상태", timeline(["작성","전송","공사 접수","확정"], item.stage))}
-      ${card("clipboard-list","검증 내용", `<p class="text-[13px] text-gray-700 leading-relaxed">${item.content}</p>`)}
-    `, "특수창구");
-  }
-  return shell("투자실적 검증", `
-    ${ipNotice()}
-    ${scrHeader("SFR-온기업-028","[특수] 펀드 운용사 - 투자실적 검증 등 보고","ONC-SCR-028","공사-운용사-수탁기관 정보대사")}
-    ${boLink(["SFR-펀드관리-022"])}
-    ${card("clock","최근 검증 이력 (클릭 시 상세)", table(["검증일","검증주기","일치여부","기타의견"], R028.map(d=>d.row), (i)=>`/028/${R028[i].id}`))}
-    ${card("check-circle-2","펀드 실물검증", `<div class="grid grid-cols-3 gap-4">${field("검증일",false,inp("",'type="date"'))}${field("검증주기",false,sel(["일간","주간","월간"]))}${field("일치여부",false,statusPill("일치","green"))}</div>${field("기타의견",false,ta("",2))}
-      <p class="text-[11px] text-gray-400">공사-운용사-수탁기관 3자 정보대사(BO-022) — 수탁기관 값 컬럼 추가 검토 필요</p>`)}
-    ${card("bar-chart-3","펀드 평가 (Valuation) 결과 보고", `${field("평가 정보 입력",false,ta("",2))}<div class="flex justify-end">${btn("평가결과 보고 및 전송",{primary:true, icon:"send"})}</div>`)}
-    ${card("shield-check","컴플라이언스"+fBadge("new"), `<p class="text-[12px] text-gray-500 mb-2">준법감시위원회 · 준법감시보고서 · 사전준법감시 체크리스트 · 위험관리 체크리스트</p>${checklist(["준법감시서약서 제출","위험관리 체크리스트 점검 완료"])}`)}
-    ${card("table-2","필드 매핑 상세", fieldMapTable([
-      ["펀드 실물검증(검증일,검증주기,일치여부,기타의견)","공사-운용사-수탁기관 정보대사(일치/불일치+기타의견), 검증주기별 이력조회, 수탁실물자료 검증 적부","BO-022","3자 대사 구조 — 수탁기관 값 컬럼 추가 검토"],
-      ["펀드 평가(Valuation) 결과 보고","자펀드 투자자산 평가(Valuation)/분석 조회","BO-022","완전 일치"],
-      ["컴플라이언스(신규)","준법감시위원회,준법감시보고서,사전준법감시 체크리스트,위험관리 체크리스트","BO-022","FO 화면에 없던 탭 — BO 요건에는 존재, 반영 필요"],
-    ]))}
-  `, "특수창구");
-};
+RENDERERS["028"] = reportScreen("028", R028, ["검증일","검증주기","일치여부","기타의견"], "SFR-온기업-028",
+  "투자실적 검증",
+  card("bar-chart-3","펀드 평가 (Valuation) 결과 보고", `${field("평가 정보 입력",false,ta("",2))}${btn("평가결과 보고 및 전송",{primary:true, icon:"send"})}`)
+  + card("shield-check","컴플라이언스"+fBadge("new"), `<p class="text-[12px] text-gray-500 mb-2">준법감시위원회 · 준법감시보고서 · 사전준법감시 체크리스트 · 위험관리 체크리스트</p>${checklist(["준법감시서약서 제출","위험관리 체크리스트 점검 완료"])}`),
+  ["SFR-펀드관리-022"]
+);
 
-/* ---------------- 029. 선박펀드 기타보고 ---------------- */
 RENDERERS["029"] = (detailId) => {
   if (detailId) {
     const item = R029.find(x=>x.id===detailId) || R029[0];
-    return shell("선박펀드 기타보고", `
-      ${backBar("/029","만기/조기상환 이력")}
-      ${scrHeader("SFR-온기업-029", item.title,"ONC-SCR-029-D")}
-      ${card("ship","상환 정보", infoGrid(item.info))}
-      ${card("refresh-cw","진행상태", timeline(["작성","전송","공사 접수","확정"], item.stage))}
-      ${card("clipboard-list","내용", `<p class="text-[13px] text-gray-700 leading-relaxed">${item.content}</p>`)}
-    `, "특수창구");
+    return shell("선박펀드 기타보고", reportDetail(item, "029", "SFR-온기업-029", "만기/조기상환", "만기/조기상환 목록"), "특수창구");
   }
   return shell("선박펀드 기타보고", `
     ${ipNotice()}
     ${scrHeader("SFR-온기업-029","[특수] 펀드 운용사 - 선박펀드 운용사 기타 보고","ONC-SCR-029","해운사 상담 / 선박투자회사 설립 / 정기수리검사 / 만기·조기상환 / 채무불이행")}
-    ${boLink(["SFR-펀드관리-024","SFR-펀드관리-026","SFR-펀드관리-028","SFR-펀드관리-030","SFR-펀드관리-031","SFR-펀드관리-032","SFR-펀드관리-037","SFR-펀드관리-041","SFR-펀드관리-042","SFR-펀드관리-043"], "· 10개 BO 요건이 5개 카드에 통합")}
-
+    ${boLink(["SFR-펀드관리-024","SFR-펀드관리-028","SFR-펀드관리-037","SFR-펀드관리-041","SFR-펀드관리-043"])}
     <div class="grid grid-cols-2 gap-4">
-      ${card("ship","① 해운사 상담 관리"+boChip("BO-024"), `<p class="text-[12px] text-gray-500 mb-2">공사·해운사 상담 이력 공동 조회/관리 — 기업고객통합정보 연동, 담당자 배정</p>${field("상담내용 등록",false,ta("",2))}`)}
-      ${card("landmark","② 선박투자회사 등 설립 보고"+boChip("BO-026 · BO-028"), `<p class="text-[12px] text-gray-500 mb-2">해외 SPC 설립·청산 이력 관리(캠코선박운용 직접 / 해외SPC는 법률자문사 위탁)</p>
-        ${subCard("file-signature","기본합의서 체결"+fBadge("new"), `${field("선박가격/선후순위 투자금액/대출금리",false,inp(""))}`)}
-        ${subCard("file-signature","계약체결(다수 계약 체크리스트)"+fBadge("new"), `<div class="grid grid-cols-2 gap-1.5 text-[11px]">${["Loan Agreement","BBCHP","Vessel Purchase Agreement","MOA","Escrow 지위이전계약"].map(d=>`<label class="flex items-center gap-1.5"><input type="checkbox" class="rounded border-gray-300"/>${d}</label>`).join("")}</div>`)}`)}
-      ${card("calendar","③ 정기수리검사(선박 현상검사) 일정 관리"+boChip("BO-043"), `<p class="text-[12px] text-gray-500 mb-2">대상·일정 조회·등록, 연간 국외출장계획, D-30 사전알람 팝업</p>
-        ${subCard("plane","국외출장 승인·결과보고 결재연동"+fBadge("new"), `${field("출장명령 신청서 작성",false,inp(""))}${field("복명서·현장사진·비용지급(IFRS 연동)",false,inp(""))}`)}`)}
-      ${card("gavel","④ 채무불이행 관리"+boChip("BO-041"), `<p class="text-[12px] text-gray-500 mb-2">위반사유(계약조건별) 현황 조회·등록, 용선사 위반사유 통지, 채권자 권리행사</p>
-        ${subCard("scale","소송 관리"+fBadge("new"), `${field("소송 현황/의뢰/기일 관리",false,inp(""))}${field("보정서 등 제출관리·소송비용 지출",false,inp(""))}`)}`)}
+      ${card("ship","해운사 상담 관리 <span class='text-[10px] font-mono text-gray-400 ml-1'>BO-024</span>", `<p class="text-[12px] text-gray-500">공사·해운사 상담 이력 공동 조회/관리</p>`)}
+      ${card("landmark","선박투자회사 등 설립 보고 <span class='text-[10px] font-mono text-gray-400 ml-1'>BO-028</span>", `<p class="text-[12px] text-gray-500 mb-1">해외 SPC 설립·청산 이력 관리</p><p class="text-[11px] text-gray-400">기본합의서 체결(선박가격·투자금액·대출금리 등)${fBadge("new")}</p>`)}
+      ${card("calendar","정기수리검사 일정 관리 <span class='text-[10px] font-mono text-gray-400 ml-1'>BO-043</span>", `<p class="text-[12px] text-gray-500 mb-1">일정 등록 및 전송 진행상태 확인</p><p class="text-[11px] text-gray-400">국외출장계획·승인·결과보고 결재연동(D-30 사전알람)${fBadge("new")}</p>`)}
+      ${card("gavel","채무불이행 관리 <span class='text-[10px] font-mono text-gray-400 ml-1'>BO-041</span>", `<p class="text-[12px] text-gray-500 mb-1">위반사유 접수·점검 등록</p><p class="text-[11px] text-gray-400">소송 관리(의뢰·기일·비용지출)${fBadge("new")}</p>`)}
     </div>
-
-    ${card("refresh-cw","⑤ 만기/조기상환 관리"+boChip("BO-037"), `<p class="text-[12px] text-gray-500 mb-2">해운사 상담·펀드 자금일정 연동, 조기상환 승인 후 운용사 통지·종결보고</p>${reportHistoryTable(R029, "029", ["펀드명","만기일","상환유형","상태"])}`)}
-
-    ${card("shield-check","계약사항 모니터링"+fBadge("new")+boChip("BO-042"), `<p class="text-[12px] text-gray-500 mb-2">보험현황·담보비율·질권·후순위저당 조건 충족여부를 펀드 보고시스템과 연동하여 점검</p>
-      <div class="grid grid-cols-2 gap-4 text-[11.5px]">${["보험현황(부보가액,보험기간,보험사,갱신일)","담보비율(평가선가,대출잔액,담보비율)","질권(예치원금,예치잔액,예금주)","후순위저당(후순위금액,금융기관)"].map(t=>`<div class="border rounded-md p-2.5 text-gray-600">${t}</div>`).join("")}</div>`)}
-
-    ${card("repeat","통화스왑 / 자금집행 참고"+fBadge("new")+boChip("BO-031 · BO-032"), `<p class="text-[11.5px] text-gray-500">중고선은 통화스왑을 통한 외화조달(원화↔외화), 신조선은 공사 외화 직접조달 — 출투자금 집행 시 인출선행조건 충족여부 확인 후 선박투자회사(스왑환율 적용)/투자신탁(외화집행)에 지급. 선박 인수·재용선 현황은 FO-027(출자금 납입요청)과 연동.</p>`)}
-
-    ${card("table-2","필드 매핑 상세", fieldMapTable([
-      ["해운사 상담 관리","기업고객통합정보 조회, 상담정보 조회·등록, 담당자 배정","BO-024","[SFR-금융지원-003] 참고"],
-      ["선박투자회사 등 설립 보고","기본합의서 체결(선박가격,투자금액,대출금리) / 선박투자회사·해외SPC 설립현황, 설립 진행경과","BO-026, BO-028","설립 흐름 네비게이션 UI 필요"],
-      ["정기수리검사 일정 관리","선박 현상검사 대상·일정, 연간 국외출장계획, D-30 사전알람, 국외출장 승인·결과보고 결재연동","BO-043","FO는 '일정 등록/전송'만 명시 — 결재연동까지 확장 필요"],
-      ["만기/조기상환 관리","만기·조기상환 현황, 해운사 상담·자금일정 연동, 승인 및 통지, 종결보고","BO-037","완전 일치"],
-      ["채무불이행 관리","위반사유 현황, 용선사 통지, 채권자 권리행사, 소송 관리","BO-041","소송 관리는 FO에 없던 항목([SFR-금융지원-024])"],
-      ["계약사항 모니터링(신규)","보험현황·담보비율·질권·후순위저당 조건 충족여부 점검","BO-042","FO 화면 전체에 없던 카드 — 신설 필요"],
-      ["통화스왑/자금집행(참고)","통화스왑 계약관리(원화↔외화), 출투자금 집행, 선박 인수·재용선 관리","BO-031, BO-032","FO-027과 상호 연동 참고용"],
-    ]))}
+    ${card("refresh-cw","만기/조기상환 관리 <span class='text-[10px] font-mono text-gray-400 ml-1'>BO-037</span>", `<p class="text-[12px] text-gray-500">해운사 상담·펀드 자금일정 연동, 승인 후 운용사 통지·종결보고</p>`)}
+    ${reportHistory(R029, "029", ["펀드명","만기일","상환유형","상태"])}
   `, "특수창구");
 };
-function reportHistoryTable(data, screenId, cols){
-  return table(cols, data.map(d=>d.row), (i)=>`/${screenId}/${data[i].id}`);
-}
 
-/* ---------------- 030. 온라인 출자사업 신청 ---------------- */
 RENDERERS["030"] = (detailId) => {
   if (detailId) {
     const a = ANNOUNCEMENTS.find(x=>x.id===detailId) || ANNOUNCEMENTS[0];
@@ -667,103 +1151,55 @@ RENDERERS["030"] = (detailId) => {
   }
   return shell("온라인 출자사업 신청", `
     ${ipNotice()}
-    ${scrHeader("SFR-온기업-030","[특수] 펀드 운용사 - 온라인 출자사업 신청","ONC-SCR-030","온기업 가입 투자자(LP) 회원도 이용 가능 (권한 설정)")}
-    ${boLink(["SFR-펀드관리-013"], "· LP측 화면은 SFR-펀드관리-023에서 동일요건 재인용")}
-
+    ${scrHeader("SFR-온기업-030","[특수] 펀드 운용사 - 온라인 출자사업 신청","ONC-SCR-030","온기업 가입 투자자 회원도 이용 가능 (권한 설정)")}
+    ${boLink(["SFR-펀드관리-013"], "· LP(투자자)측 화면은 SFR-펀드관리-023에서 동일 요건 재인용")}
     ${card("calendar","출자사업 공고 조회 (클릭 시 상세)", table(["공고명","접수일","마감일","심사일"], ANNOUNCEMENTS.map(a=>[a.name,a.open,a.close,a.review]), (i)=>`/030/${ANNOUNCEMENTS[i].id}`))}
-
-    ${card("message-square-more","출자사업 사전 관리"+fBadge("new"), `<p class="text-[11.5px] text-gray-500 mb-2">정식제안서 접수 이전 티저 회의·미팅·출자설명회 등 조회·등록(BO-013)</p>${table(["구분","실시일자","대상 운용사","체크리스트 점검결과"], [["출자설명회","2026-06-20","○○자산운용","적합"]])}`)}
-
-    ${card("send","출자사업 신청", `${field("신청 주요내용",false,ta("",2))}<div class="border-2 border-dashed rounded-lg p-4 text-center text-[12px] text-gray-500 mb-3">제안서 등록/변경</div>${field("펀드유형/펀드결성예정액/존속기간/기준수익률/보수"+fBadge("new"),false,inp("텍스트 입력"))}<div class="flex justify-end">${btn("신청서 접수 및 출력",{primary:true, icon:"send"})}</div>`)}
-
     ${card("list-checks","심사 진행현황"+fBadge("new"), `<p class="text-[11.5px] text-gray-500 mb-3">서류평가 → 접수심사 → 현장실사 → 외부평가 → 리스크심사 → 투자심의 (BO-013 단계별 심사)</p>
       ${timeline(["서류평가","접수심사","현장실사","외부평가","리스크심사","투자심의"], 2)}`)}
-
-    ${card("award","선정 결과 · LOC 관리"+fBadge("new"), `<div class="grid grid-cols-3 gap-3 text-[12px]">
-      <div class="border rounded-lg p-3"><p class="font-medium text-gray-700">선정 결과보고/통보</p><p class="text-gray-400 text-[11px] mt-1">LOC 발급 및 유효기간 연장</p></div>
-      <div class="border rounded-lg p-3"><p class="font-medium text-gray-700">출자사업 결성 관리</p><p class="text-gray-400 text-[11px] mt-1">자펀드 결성정보 최종등록, 투자계약서·정관 관리</p></div>
-      <div class="border rounded-lg p-3"><p class="font-medium text-gray-700">선정 취소</p><p class="text-gray-400 text-[11px] mt-1">LOC 반납, LOC 기한만료 취소</p></div>
-    </div>`)}
-
-    ${card("table-2","필드 매핑 상세", fieldMapTable([
-      ["출자사업 공고 조회","공고 관리(대상 모펀드,공고일자,공고제목,공고문,진행현황,결과)","BO-013","완전 일치"],
-      ["신청 주요내용/제안서 등록","출자사업 신청·정식제안서 접수 현황, 신청 주요내용 입력 및 서류 등록","BO-013","완전 일치"],
-      ["신청서 접수 및 출력","제안서 접수결과 보고","BO-013","완전 일치"],
-      ["심사 진행현황(신규)","출자사업 심사 관리(서류평가,접수심사,현장실사,외부평가,리스크심사,투자심의 단계별)","BO-013","FO 화면에 심사 단계 진행상태 노출 UI 없음 — 추가 필요"],
-      ["선정 결과·LOC 관리(신규)","선정 결과보고/통보 및 LOC 발급(유효기간 연장 포함), 출자사업 결성 관리, 선정취소(LOC반납/기한만료)","BO-013","FO에 없던 후속 프로세스 — 화면 확장 필요"],
-    ]))}
   `, "특수창구");
 };
 
-/* ---------------- 031. 수탁기관 운용지시서 관리 ---------------- */
-RENDERERS["031"] = (detailId) => {
-  if (detailId) {
-    const item = R031.find(x=>x.id===detailId) || R031[0];
-    return shell("운용지시서 관리", `
-      ${backBar("/031","운용지시 이력")}
-      ${scrHeader("SFR-온기업-031", item.title,"ONC-SCR-031-D")}
-      ${card("file-signature","운용지시 정보", infoGrid(item.info))}
-      ${card("refresh-cw","진행상태", timeline(["작성","전송","공사 접수","확정"], item.stage))}
-      ${card("clipboard-list","내용", `<p class="text-[13px] text-gray-700 leading-relaxed">${item.content}</p>`)}
-    `, "특수창구");
-  }
-  return shell("운용지시서 관리", `
-    ${ipNotice()}
-    ${scrHeader("SFR-온기업-031","[특수] 수탁기관 - 운용지시서 관리","ONC-SCR-031")}
-    ${boLink(["SFR-펀드관리-010"])}
-    ${card("clock","운용지시서 접수 현황 (클릭 시 상세)", table(["펀드구분","운용지시종류","운용지시일","제목","진행현황"], R031.map(d=>d.row), (i)=>`/031/${R031[i].id}`))}
-    ${card("file-signature","운용지시서 생성"+fBadge("new"), `<p class="text-[11.5px] text-gray-500 mb-2">표준 양식 기반(BO-010)</p>${field("운용지시 유형",false,sel(["출자","배분","투자","회수","투자자산변동","환전","계좌간이체","일반자금운용","출자증서관리","기타"]))}${field("관련 모펀드 계좌",false,inp(""))}`)}
-    ${card("send","운용지시 결과 보고 및 전송", `${field("처리현황 등록",false,ta("",2))}<div class="flex justify-end">${btn("전송 (진행상태: 전송/접수/확정)",{primary:true, icon:"send"})}</div>`)}
-    ${card("table-2","필드 매핑 상세", fieldMapTable([
-      ["펀드구분,운용지시종류,운용지시일,제목,진행현황","펀드구분,수탁기관명,운용지시종류,운용지시일자,운용지시제목,운용지시내용,진행현황,관련계좌,첨부파일","BO-010","필드 완전 일치(BO엔 수탁기관명·계좌 필드 추가)"],
-      ["운용지시서 생성(신규)","표준 양식 생성 — 출자/배분/투자/회수/투자자산변동/환전/계좌간이체/일반자금운용/출자증서관리/기타","BO-010","양식은 BO-010 마스터, FO는 표시·다운로드만 담당"],
-      ["운용지시 결과 보고 및 전송","처리현황·결과 관리(수탁기관 보고시스템 연동하여 처리결과 수신·확인)","BO-010","완전 일치"],
-    ]))}
-  `, "특수창구");
-};
+RENDERERS["031"] = reportScreen("031", R031, ["펀드구분","운용지시종류","운용지시일","제목","진행현황"], "SFR-온기업-031",
+  "운용지시서",
+  card("file-signature","운용지시서 생성"+fBadge("new"), `<p class="text-[11.5px] text-gray-500 mb-2">표준 양식 기반 — 출자/배분/투자/회수/투자자산변동/환전/계좌간이체/일반자금운용/출자증서관리/기타(BO-010)</p>${field("운용지시 유형",false,sel(["출자","배분","투자","회수","투자자산변동","환전","계좌간이체","일반자금운용","출자증서관리","기타"]))}`)
+  + card("send","운용지시 결과 보고 및 전송", `${field("처리현황 등록",false,ta("",2))}${btn("전송 (진행상태: 전송/접수/확정)",{primary:true, icon:"send"})}`),
+  ["SFR-펀드관리-010"]
+);
 
-/* ---------------- 032. 수탁기관 정보대사 관리 ---------------- */
 RENDERERS["032"] = (detailId) => {
   if (detailId) {
     const r = RECON_ITEMS.find(x=>x.id===detailId) || RECON_ITEMS[0];
     return shell("정보대사 관리", `
       ${backBar("/032","정보대사 목록")}
       ${scrHeader("SFR-온기업-032", r.label + " 대사 상세","ONC-SCR-032-D")}
-      ${card("database","대사 결과", infoGrid([["공사 시스템 값",r.sysval],["수탁기관 값",r.trustval],["일치여부",statusPill(r.match,r.tone)],["대사주기",r.cycle]]))}
+      ${card("database","대사 결과", infoGrid([["공사 시스템 값",r.sysval],["수탁기관 값",r.trustval],["일치여부",statusPill(r.match,r.tone)]]))}
       ${r.memo ? card("message-square","소통 이력", `<p class="text-[13px] text-gray-700">${r.memo}</p><div class="mt-3">${field("소명 답변 등록",false,ta("",2))}</div>${btn("답변 등록",{primary:true, icon:"send"})}`) : ""}
     `, "특수창구");
   }
   return shell("정보대사 관리", `
     ${ipNotice()}
-    ${scrHeader("SFR-온기업-032","[특수] 수탁기관 - 정보대사 관리 등","ONC-SCR-032","계좌/보유자산/입출금/잔고 정보대사")}
-    ${boLink(["SFR-펀드관리-010"], "· 031과 동일 요건 하위(운용지시/정보대사 두 서브블록)")}
+    ${scrHeader("SFR-온기업-032","[특수] 수탁기관 - 정보대사 관리 등","ONC-SCR-032","[SFR-펀드관리-010] 연계 · 계좌/보유자산/입출금/잔고 정보대사")}
+    ${boLink(["SFR-펀드관리-010"])}
     ${field("대사 주기"+fBadge("new"), false, sel(["일간","주간","월간"]), "BO-010 원문 기준 — 대사주기별 이력 조회 필터")}
     ${card("database","수탁기관 정보대사 (클릭 시 상세)", table(["항목","공사 시스템 값","수탁기관 값","일치여부"], RECON_ITEMS.map(r=>[r.label,r.sysval,r.trustval,statusPill(r.match,r.tone)]), (i)=>`/032/${RECON_ITEMS[i].id}`))}
-    ${card("message-square","소통 관리 (수탁기관 ↔ 공사 게시판)"+fBadge("gap"), `<div class="flex items-center justify-between border rounded-lg p-3">
-        <p class="text-[13px]">입출금 내역 불일치 건 확인 요청</p>${statusPill("답변대기","amber")}
-      </div>`)}
     ${gapBox("소통 관리(수탁기관 ↔ 공사 게시판)는 FO 화면에 존재하지만 BO-010 원문에는 게시판 기능이 명시되어 있지 않습니다. BO-022(운용사 소통) 패턴을 수탁기관용으로 별도 신설할지 발주처 확인이 필요합니다.")}
-    ${card("table-2","필드 매핑 상세", fieldMapTable([
-      ["계좌 잔고/보유 자산내역/입출금 내역","수탁기관 정보대사 — 공사 시스템 관리정보와 수탁기관 관리정보 대사(계좌,보유자산내역,입출금내역,잔고 등)","BO-010","필드 완전 일치"],
-      ["일치여부 표시(일치/불일치)","수탁기관 보고시스템과 연동하여 확인, 일치/불일치 및 기타의견 표시","BO-010","완전 일치"],
-      ["대사 주기 이력(신규)","대사주기(일간,주간,월간)별 이력 관리","BO-010","FO 화면에 주기 선택 필터 없음 — 추가 권장"],
-      ["소통 관리(게시판)","BO-010 원문에 게시판 기능 명시 없음","-","BO-022 패턴 수탁기관용 신설 여부 확인 필요"],
-    ]))}
   `, "특수창구");
 };
 
+/* shell 함수는 3번째 인자로 gnbSub을 받도록 이미 정의됨 -- 위 호출부와 매칭 확인용 래퍼 불필요 */
+
 /* ================= 라우터 & 렌더링 ================= */
 function parseHash() {
-  const raw = (location.hash || "").replace(/^#/, "") || "/000";
+  const raw = (location.hash || "").replace(/^#/, "") || "/011";
   const segs = raw.split("/").filter(Boolean);
-  return { screenId: segs[0] || "000", detailId: segs[1], raw: "/" + segs.join("/") };
+  return { screenId: segs[0] || "011", detailId: segs[1], raw: "/" + segs.join("/") };
 }
 function renderSidebar(activeId) {
   const groups = [...new Set(SCREENS.map(s=>s.group))];
   const html = `
     <div class="px-4 py-4 border-b border-gray-100">
-      <p class="text-[13px] font-medium" style="color:${NAVY}">펀드 특수창구 FO 화면설계서</p>
-      <p class="text-[11px] text-gray-400 mt-0.5">SFR-온기업-021~032 × SFR-펀드관리-001~044</p>
+      <p class="text-[13px] font-medium" style="color:${NAVY}">온기업(OnCorp) 화면설계서</p>
+      <p class="text-[11px] text-gray-400 mt-0.5">SFR-온기업-002 ~ 032 · HTML/CSS/JS 버전</p>
     </div>
     ${groups.map(g=>`
       <div class="py-2">
@@ -774,17 +1210,13 @@ function renderSidebar(activeId) {
             <span class="font-mono text-[10px] text-gray-400 w-8">${s.id}</span>${s.name}
           </button>`).join("")}
       </div>`).join("")}
-    <div class="mx-4 mt-3 p-3 rounded-lg" style="background:#F3F6FD">
-      <p class="text-[10.5px] font-semibold text-gray-500 mb-1.5">범례</p>
-      <p class="text-[10.5px] text-gray-500 leading-relaxed">${fBadge("new")} BO에 있는데 FO엔 없던 필드<br>${fBadge("calc")} 지분율 기반 1차 자동계산<br>${fBadge("ext")} BO 근거로 세부 확장<br>${fBadge("gap")} 연계 근거 확인 필요</p>
-    </div>
   `;
   document.getElementById("sidebar").innerHTML = html;
 }
 function renderApp() {
   const { screenId, detailId, raw } = parseHash();
   renderSidebar(screenId);
-  const renderer = RENDERERS[screenId] || RENDERERS["000"];
+  const renderer = RENDERERS[screenId] || RENDERERS["011"];
   document.getElementById("content").innerHTML = renderer(detailId);
   document.getElementById("pathbar").innerHTML = `<span>#${raw}</span>${detailId?` <span class="text-gray-300">/</span> <span class="text-gray-500">상세보기</span>`:""}`;
   if (window.lucide) lucide.createIcons();
