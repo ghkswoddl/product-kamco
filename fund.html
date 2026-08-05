@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>온기업(OnCorp) 특수창구 FO-BO 인터페이스 정의서 | SFR-온기업-021~032 × SFR-펀드관리-001~044</title>
+<style>
+  :root{
+    --krds-blue:#184BB4;
+    --krds-blue-dark:#0F3280;
+    --krds-blue-tint:#E6EDFA;
+    --krds-blue-tint2:#F3F6FD;
+    --ink:#1B1D22;
+    --ink-sub:#525761;
+    --line:#DCE1EA;
+    --line-soft:#EDF0F5;
+    --bg:#F6F8FB;
+    --white:#FFFFFF;
+    --amber:#B4740F;
+    --amber-tint:#FBF2E1;
+    --green:#137A4C;
+    --green-tint:#E5F5EE;
+    --red:#B4271F;
+    --red-tint:#FBEAE9;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Pretendard','Noto Sans KR',-apple-system,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    font-size:14px;
+    line-height:1.6;
+  }
+  a{color:inherit;}
+
+  /* ---------- Government common header ---------- */
+  .gov-tag{
+    background:var(--krds-blue-dark);
+    color:#fff;
+    font-size:11px;
+    padding:5px 24px;
+    letter-spacing:.02em;
+    display:flex;
+    justify-content:space-between;
+  }
+  .gov-tag span{opacity:.85;}
+
+  header.gnb{
+    background:var(--white);
+    border-bottom:1px solid var(--line);
+    padding:14px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:sticky;
+    top:0;
+    z-index:50;
+  }
+  .gnb-left{display:flex;align-items:center;gap:12px;}
+  .gnb-logo{
+    width:34px;height:34px;border-radius:8px;
+    background:linear-gradient(135deg,var(--krds-blue),var(--krds-blue-dark));
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:700;font-size:13px;
+  }
+  .gnb-title{font-size:15px;font-weight:700;color:var(--krds-blue-dark);}
+  .gnb-sub{font-size:11px;color:var(--ink-sub);margin-top:1px;}
+  .gnb-crumb{font-size:12px;color:var(--ink-sub);}
+  .gnb-crumb b{color:var(--krds-blue-dark);font-weight:600;}
+
+  .layout{display:flex;max-width:1400px;margin:0 auto;}
+
+  /* ---------- LNB ---------- */
+  nav.lnb{
+    width:250px;flex-shrink:0;
+    padding:20px 12px 60px;
+    position:sticky;top:63px;
+    align-self:flex-start;
+    max-height:calc(100vh - 63px);
+    overflow-y:auto;
+  }
+  .lnb-group-title{
+    font-size:11px;font-weight:700;color:var(--ink-sub);
+    text-transform:uppercase;letter-spacing:.04em;
+    padding:14px 12px 6px;
+  }
+  .lnb a.lnb-item{
+    display:flex;gap:8px;align-items:baseline;
+    padding:8px 12px;border-radius:8px;
+    font-size:12.5px;color:var(--ink);
+    text-decoration:none;
+    border-left:3px solid transparent;
+  }
+  .lnb a.lnb-item:hover{background:var(--krds-blue-tint2);}
+  .lnb a.lnb-item .code{
+    font-family:'SF Mono',Consolas,monospace;font-size:10px;color:#8992A3;
+    min-width:26px;
+  }
+  .lnb-note{
+    margin:14px 12px 0;padding:10px 12px;
+    background:var(--krds-blue-tint2);border-radius:8px;
+    font-size:11px;color:var(--ink-sub);line-height:1.55;
+  }
+
+  main{flex:1;min-width:0;padding:24px 28px 100px;}
+
+  /* ---------- Hero / intro ---------- */
+  .doc-hero{
+    background:linear-gradient(120deg,var(--krds-blue-dark),var(--krds-blue) 70%);
+    color:#fff;border-radius:16px;
+    padding:28px 32px;margin-bottom:22px;
+    position:relative;overflow:hidden;
+  }
+  .doc-hero::after{
+    content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;
+    border-radius:50%;background:rgba(255,255,255,.08);
+  }
+  .doc-hero .kicker{font-size:11.5px;letter-spacing:.06em;opacity:.85;font-weight:600;text-transform:uppercase;}
+  .doc-hero h1{font-size:21px;margin:6px 0 8px;font-weight:800;line-height:1.4;}
+  .doc-hero p{font-size:12.8px;opacity:.92;max-width:760px;margin:0;}
+  .doc-hero .stats{display:flex;gap:22px;margin-top:18px;flex-wrap:wrap;}
+  .doc-hero .stat b{font-size:20px;display:block;}
+  .doc-hero .stat span{font-size:11px;opacity:.85;}
+
+  /* ---------- Cards / sections ---------- */
+  section.fo-block{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:14px;
+    margin-bottom:28px;
+    scroll-margin-top:80px;
+    overflow:hidden;
+  }
+  .fo-head{
+    padding:18px 24px;
+    border-bottom:1px solid var(--line-soft);
+    display:flex;justify-content:space-between;align-items:flex-start;
+    gap:16px;background:var(--krds-blue-tint2);
+  }
+  .fo-head .fo-code{
+    display:inline-block;font-family:'SF Mono',Consolas,monospace;
+    font-size:11px;font-weight:700;color:var(--krds-blue-dark);
+    background:var(--krds-blue-tint);padding:3px 9px;border-radius:20px;
+    margin-bottom:7px;
+  }
+  .fo-head h2{font-size:16.5px;margin:0 0 4px;font-weight:800;color:var(--ink);}
+  .fo-head .fo-meta{font-size:11.5px;color:var(--ink-sub);}
+  .fo-head .screen-id{
+    font-size:10.5px;color:var(--ink-sub);font-family:'SF Mono',Consolas,monospace;
+    background:#fff;border:1px solid var(--line);padding:3px 8px;border-radius:6px;white-space:nowrap;
+  }
+
+  .link-strip{
+    display:flex;flex-wrap:wrap;gap:8px;
+    padding:14px 24px;border-bottom:1px solid var(--line-soft);
+  }
+  .link-chip{
+    display:flex;align-items:center;gap:7px;
+    background:var(--white);border:1px solid var(--line);
+    border-radius:9px;padding:7px 12px;font-size:11.5px;
+  }
+  .link-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--krds-blue);flex-shrink:0;}
+  .link-chip b{font-family:'SF Mono',Consolas,monospace;color:var(--krds-blue-dark);font-weight:700;font-size:11px;}
+  .link-chip .arrow{color:#B7BECC;}
+  .link-chip.none{color:var(--amber);background:var(--amber-tint);border-color:#EED9AE;}
+
+  .fo-body{padding:20px 24px 26px;}
+  .fo-body .desc{
+    font-size:12.3px;color:var(--ink-sub);background:var(--line-soft);
+    border-left:3px solid var(--krds-blue);padding:10px 14px;border-radius:0 8px 8px 0;
+    margin-bottom:18px;
+  }
+
+  table.map-table{
+    width:100%;border-collapse:collapse;font-size:12.3px;
+    border:1px solid var(--line);border-radius:10px;overflow:hidden;
+  }
+  table.map-table th{
+    background:var(--krds-blue-dark);color:#fff;
+    text-align:left;font-weight:700;padding:10px 12px;font-size:11.5px;
+    letter-spacing:.01em;
+  }
+  table.map-table td{
+    padding:10px 12px;border-top:1px solid var(--line-soft);
+    vertical-align:top;
+  }
+  table.map-table tr:nth-child(even) td{background:#FBFCFE;}
+  table.map-table td.fo-field{color:var(--ink);font-weight:600;width:26%;}
+  table.map-table td.arrow-cell{width:26px;text-align:center;color:var(--krds-blue);font-weight:700;}
+  table.map-table td.bo-field{width:38%;color:var(--ink);}
+  table.map-table td.bo-src{
+    width:14%;font-family:'SF Mono',Consolas,monospace;font-size:10.5px;color:var(--krds-blue-dark);font-weight:700;
+  }
+  table.map-table td.remark{width:22%;color:var(--ink-sub);font-size:11.5px;}
+
+  .badge{
+    display:inline-block;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:5px;
+    margin-right:4px;vertical-align:middle;
+  }
+  .badge.new{background:var(--green-tint);color:var(--green);}
+  .badge.calc{background:var(--amber-tint);color:var(--amber);}
+  .badge.gap{background:var(--red-tint);color:var(--red);}
+
+  .gap-note{
+    margin-top:16px;padding:12px 14px;border-radius:8px;
+    background:var(--red-tint);border:1px solid #F0C6C3;
+    font-size:11.8px;color:#7A1D18;
+  }
+  .gap-note b{color:var(--red);}
+
+  /* summary matrix */
+  .matrix-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff;}
+  table.matrix{border-collapse:collapse;width:100%;font-size:11.5px;min-width:760px;}
+  table.matrix th{
+    background:var(--krds-blue-dark);color:#fff;padding:9px 10px;font-size:11px;
+    position:sticky;top:0;
+  }
+  table.matrix td{padding:8px 10px;border-top:1px solid var(--line-soft);}
+  table.matrix tr:nth-child(even) td{background:#FBFCFE;}
+  table.matrix td.center{text-align:center;}
+  .pill{
+    display:inline-block;background:var(--krds-blue-tint);color:var(--krds-blue-dark);
+    font-family:'SF Mono',Consolas,monospace;font-size:10px;font-weight:700;
+    padding:2px 7px;border-radius:12px;margin:1px;
+  }
+
+  h3.sec-title{
+    font-size:13.5px;font-weight:800;color:var(--krds-blue-dark);
+    margin:0 0 12px;display:flex;align-items:center;gap:8px;
+  }
+  h3.sec-title::before{content:"";width:4px;height:14px;background:var(--krds-blue);border-radius:2px;}
+
+  footer{
+    text-align:center;color:var(--ink-sub);font-size:11px;padding:30px 0 10px;
+  }
+
+  @media (max-width:960px){
+    nav.lnb{display:none;}
+    main{padding:16px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="gov-tag">
+  <span>한국자산관리공사 KAMCO · 온기업(OnCorp) 공적 기업구조조정 지원 플랫폼 구축 사업</span>
+  <span>인터페이스 정의서(ICD) · 내부 검토용</span>
+</div>
+
+<header class="gnb">
+  <div class="gnb-left">
+    <div class="gnb-logo">캠코</div>
+    <div>
+      <div class="gnb-title">온기업(OnCorp) FO–BO 인터페이스 정의서</div>
+      <div class="gnb-sub">특수창구(펀드) 화면 ↔ 펀드관리 백오피스 요건 · 필드 단위 매핑</div>
+    </div>
+  </div>
+  <div class="gnb-crumb">RFP 원문 대조 · <b>SFR-온기업-021~032</b> × <b>SFR-펀드관리-001~044</b></div>
+</header>
+
+<div class="layout">
+  <nav class="lnb">
+    <div class="lnb-group-title">개요</div>
+    <a class="lnb-item" href="#overview"><span class="code">◎</span> 전체 매핑 매트릭스</a>
+
+    <div class="lnb-group-title">자문기관</div>
+    <a class="lnb-item" href="#fo021"><span class="code">021</span> 의뢰관리</a>
+
+    <div class="lnb-group-title">펀드 운용사(GP)</div>
+    <a class="lnb-item" href="#fo022"><span class="code">022</span> 일반(명세관리)</a>
+    <a class="lnb-item" href="#fo023"><span class="code">023</span> 투자심사 보고</a>
+    <a class="lnb-item" href="#fo024"><span class="code">024</span> 총회/이사회 보고</a>
+    <a class="lnb-item" href="#fo025"><span class="code">025</span> 보고사항 보고</a>
+    <a class="lnb-item" href="#fo026"><span class="code">026</span> 공문 보고</a>
+    <a class="lnb-item" href="#fo027"><span class="code">027</span> 출자금 납입요청 등</a>
+    <a class="lnb-item" href="#fo028"><span class="code">028</span> 투자실적 검증 등 보고</a>
+    <a class="lnb-item" href="#fo029"><span class="code">029</span> 선박펀드 기타보고</a>
+    <a class="lnb-item" href="#fo030"><span class="code">030</span> 온라인 출자사업 신청</a>
+
+    <div class="lnb-group-title">수탁기관</div>
+    <a class="lnb-item" href="#fo031"><span class="code">031</span> 운용지시서 관리</a>
+    <a class="lnb-item" href="#fo032"><span class="code">032</span> 정보대사 관리</a>
+
+    <div class="lnb-note">
+      <b>범례</b><br>
+      <span class="badge new">신규</span> BO에 없는 FO 자체 파생 필드<br>
+      <span class="badge calc">자동계산</span> 지분율 기반 1차 자동계산 후 수정 가능<br>
+      <span class="badge gap">확인필요</span> RFP상 명시적 연계 코드 없음
+    </div>
+  </nav>
+
+  <main>
+    <div class="doc-hero">
+      <div class="kicker">Field-level Interface Mapping · RFP 원문 전수 대조</div>
+      <h1>특수창구 FO 화면 12종 ↔ 펀드관리 BO 요건 44종, 필드 단위 1:1 매핑</h1>
+      <p>SFR-온기업-021~032(홈페이지 특수창구, FO) 각 화면의 입력·조회 필드를 SFR-펀드관리-001~044(BO) 원문에 기재된 연계 표기(<code>※ [SFR-펀드관리-0xx] 요구사항과 연계</code>)를 근거로 실제 필드 텍스트까지 대조했습니다. FO 화면 설계 시 BO 쪽에서 먼저 확정되어야 하는 마스터 데이터·계산 로직·승인 흐름을 항목별로 표기했습니다.</p>
+      <div class="stats">
+        <div class="stat"><b>12</b><span>FO 특수창구 화면</span></div>
+        <div class="stat"><b>44</b><span>BO 펀드관리 요건</span></div>
+        <div class="stat"><b>19</b><span>실제 인용된 BO 연계 코드</span></div>
+        <div class="stat"><b>1</b><span>연계코드 미표기 화면(021)</span></div>
+      </div>
+    </div>
+
+    <section id="overview" class="fo-block">
+      <div class="fo-head">
+        <div>
+          <span class="fo-code">OVERVIEW</span>
+          <h2>전체 매핑 매트릭스</h2>
+          <div class="fo-meta">FO 화면별로 RFP 원문에 실제 인용된 BO 요건번호. 괄호는 요건명 축약.</div>
+        </div>
+      </div>
+      <div class="fo-body">
+        <div class="matrix-wrap">
+        <table class="matrix">
+          <tr>
+            <th>FO 코드</th><th>FO 화면명</th><th>연계 BO 요건번호(원문 인용)</th><th>비고</th>
+          </tr>
+          <tr>
+            <td class="center"><span class="pill">021</span></td><td>자문기관 - 의뢰관리</td>
+            <td><span class="pill">BO-012</span> (자문기관 관리, 개념적 대응)</td>
+            <td class="center"><span class="badge gap">확인필요</span></td>
+          </tr>
+          <tr>
+            <td class="center"><span class="pill">022</span></td><td>펀드 운용사 일반(명세관리)</td>
+            <td><span class="pill">BO-014</span><span class="pill">BO-016</span><span class="pill">BO-018</span></td>
+            <td>펀드/투자포트폴리오/운용사 3계열</td>
+          </tr>
+          <tr>
+            <td class="center"><span class="pill">023</span></td><td>투자심사 보고</td>
+            <td><span class="pill">BO-017</span></td>
+            <td>1:1 대응</td>
+          </tr>
+          <tr>
+            <td class="center"><span class="pill">024</span></td><td>총회/이사회 보고</td>
+            <td><span class="pill">BO-019</span><span class="pill">BO-038</span></td>
+            <td>자펀드+선박펀드 총회 통합</td>
+          </tr>
+          <tr>
+            <td class="center"><span class="pill">025</span></td><td>보고사항 보고</td>
+            <td><span class="pill">BO-020</span><span class="pill">BO-039</span></td>
+            <td>선박펀드는 용선사 모니터링 포함</td>
+          </tr>
+          <tr>
+            <td class="center"><span class="pill">026</span></td><td>공문 보고</td>
+            <td><span class="pill">BO-021</span><span class="pill">BO-040</span></td>
+            <td>1:1 대응(자펀드/선박펀드)</td>
+          </tr>
+          <tr>
+            <td class="center"><span class="pill">027</span></td><td>출자금 납입요청 등</td>
+            <td><span class="pill">BO-015</span><span class="pill">BO-032</span><span class="pill">BO-034</span></td>
+            <td>자동계산·인출선행조건·사전알람 포함</td>
+          </tr>
+          <tr>
+            <td class="center"><span class="pill">028</span></td><td>투자실적 검증 등 보고</td>
+            <td><span class="pill">BO-022</span></td>
+            <td>1:1 대응</td>
+          </tr>
+          <tr>
+            <td class="center"><span class="pill">029</span></td><td>선박펀드 기타보고</td>
+            <td><span class="pill">BO-024</span><span class="pill">BO-028</span><span class="pill">BO-037</span><span class="pill">BO-041</span><span class="pill">BO-043</span></td>
+            <td>5개 요건 통합 (상담/설립/상환/채무불이행/현상검사)</td>
+          </tr>
+          <tr>
+            <td class="center"><span class="pill">030</span></td><td>온라인 출자사업 신청</td>
+            <td><span class="pill">BO-013</span></td>
+            <td>1:1 대응 (LP측은 BO-023에서 재인용)</td>
+          </tr>
+          <tr>
+            <td class="center"><span class="pill">031</span></td><td>수탁기관 - 운용지시서 관리</td>
+            <td><span class="pill">BO-010</span></td>
+            <td>1:1 대응(운용지시 파트)</td>
+          </tr>
+          <tr>
+            <td class="center"><span class="pill">032</span></td><td>수탁기관 - 정보대사 관리</td>
+            <td><span class="pill">BO-010</span></td>
+            <td>1:1 대응(정보대사 파트, 031과 동일 요건 하위)</td>
+          </tr>
+        </table>
+        </div>
+        <div class="gap-note">
+          <b>디렉터 확인 필요:</b> SFR-온기업-021(자문기관 의뢰관리)은 022~032와 달리 원문에 <code>※ [SFR-펀드관리-0xx] 요구사항과 연계</code> 문구가 없습니다. 개념상 BO-012의 "자문기관 관리" 서브항목([SFR-금융지원-006] 참조)과 BO-026 "외부평가 관리"가 대응되지만, 코드가 명시되지 않아 발주처 확인 없이는 화면설계서에 "연계 요건: 미상"으로 표기해야 정합성 오류를 피할 수 있습니다.
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FO-021 ================= -->
+    <section id="fo021" class="fo-block">
+      <div class="fo-head">
+        <div>
+          <span class="fo-code">SFR-온기업-021</span>
+          <h2>[특수] 자문기관 - 의뢰관리</h2>
+          <div class="fo-meta">회계법인·감정평가법인·법무법인·건물관리기관(S&amp;LB)·컨설팅기관(DIP) 대상</div>
+        </div>
+        <div class="screen-id">ONC-SCR-021</div>
+      </div>
+      <div class="link-strip">
+        <div class="link-chip none"><span class="dot"></span> BO 연계코드 <b>명시 없음</b> <span class="arrow">→</span> 개념 대응 <b>SFR-펀드관리-012</b>(자문기관 관리) / <b>SFR-펀드관리-026</b>(외부평가 관리)</div>
+      </div>
+      <div class="fo-body">
+        <div class="desc">BO-012는 "[SFR-금융지원-006] 요구사항 참고"로 자문기관 pool 연동을 정의하고 있어, FO-021의 데이터 원천은 사실상 이 두 항목의 합집합으로 추정됩니다.</div>
+        <table class="map-table">
+          <tr><th>FO 화면 필드(SFR-온기업-021)</th><th></th><th>대응 BO 필드/기능</th><th>BO 출처</th><th>비고</th></tr>
+          <tr>
+            <td class="fo-field">대상사업 / 일자 / 담당자 / 의뢰유형 / 의뢰제목 / 상태</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">외부평가 대상 조회·등록 / 외부자문기관 pool 관리 연동 / 외부평가 의뢰</td>
+            <td class="bo-src">BO-012, BO-026</td>
+            <td class="remark">자문기관 마스터(회계법인/감정평가법인/법무법인/S&amp;LB/DIP)는 BO에서 pool로 선등록 필요</td>
+          </tr>
+          <tr>
+            <td class="fo-field">자료 송수신 및 소통(첨부파일)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">외부평가 자료 송수신</td>
+            <td class="bo-src">BO-026</td>
+            <td class="remark">전송 진행상태(전송/접수/확정) 값 정의 필요</td>
+          </tr>
+          <tr>
+            <td class="fo-field">결과 보고(수치·내용 입력, 첨부파일)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">외부평가 결과 확인·등록 및 외부평가 결과 관리</td>
+            <td class="bo-src">BO-012, BO-026</td>
+            <td class="remark">사업별 수요에 따라 필요 항목을 정의(가변 스키마) — 화면설계 시 항목 커스터마이즈 UI 필요</td>
+          </tr>
+          <tr>
+            <td class="fo-field">비용 청구</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">외부평가 자문비용 지급</td>
+            <td class="bo-src">BO-026</td>
+            <td class="remark">지급 승인/이력 관리는 BO 전용(FO는 청구만)</td>
+          </tr>
+          <tr>
+            <td class="fo-field">이력 관리(의뢰·송수신·소통·결과보고·비용청구·지급)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field"><span class="badge new">신규</span> BO 원문에 통합 이력 테이블 명시 없음</td>
+            <td class="bo-src">-</td>
+            <td class="remark">FO-021 자체 요건. BO에 이력 테이블 신설 필요 여부 확인 요망</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= FO-022 ================= -->
+    <section id="fo022" class="fo-block">
+      <div class="fo-head">
+        <div>
+          <span class="fo-code">SFR-온기업-022</span>
+          <h2>[특수] 펀드 운용사 일반(명세 관리)</h2>
+          <div class="fo-meta">운용사 작성 → 운용사 전송 → 공사 확인 → 승인. 전송 이후 수정 불가</div>
+        </div>
+        <div class="screen-id">ONC-SCR-022</div>
+      </div>
+      <div class="link-strip">
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-014</b> 자펀드 기본 명세</div>
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-016</b> 자펀드 투자포트폴리오 관리</div>
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-018</b> 자펀드 운용사 명세 조회</div>
+      </div>
+      <div class="fo-body">
+        <div class="desc">BO-014 원문: "자펀드 정보 입력/보고는 자펀드 운용사가 자펀드 보고시스템을 통해 입력/보고하고, 시스템 연동을 통해 공사 확인(의견 포함) 및 확정" — 즉 FO-022가 바로 그 "자펀드 보고시스템" 화면입니다.</div>
+        <table class="map-table">
+          <tr><th>FO 카드</th><th></th><th>대응 BO 필드</th><th>BO 출처</th><th>비고</th></tr>
+          <tr>
+            <td class="fo-field">운용사 관리 — 기본정보·인력현황</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">운용사 기본정보·인력현황·제재 및 조치사항·메모 / 핵심운용인력 현황(업력,학력,경력,제재사항) / 펀드이력정보(신청~해산 관련펀드 일체, 상태별 구분)</td>
+            <td class="bo-src">BO-018</td>
+            <td class="remark">운용사 마스터는 캠코선박운용(주) 예외 처리 필요(BO-044 별도)</td>
+          </tr>
+          <tr>
+            <td class="fo-field">펀드 관리 — 펀드 기본정보·출자자현황·재무제표</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">설정일,만기일,투자기간,펀드규모,약정액,집행액,상태 / 운용사,운용인력 / 회계감사인·수탁기관·사무관리회사 / 보수정보(관리보수,성과보수) / 계좌정보 / 출자자(LP) 정보(출자자명,계좌정보,담당자, 약정액,약정비율,종구분,순위구분,출자비율,출자/분배 누계)</td>
+            <td class="bo-src">BO-014</td>
+            <td class="remark">필드명까지 완전 동일 — FO 입력폼을 BO-014 스키마 그대로 재사용 가능</td>
+          </tr>
+          <tr>
+            <td class="fo-field">투자포트폴리오 관리 — 기본정보·재무정보</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">유형별(기업/부동산/채권/프로젝트) 필요정보, SPC 여부 / 법인번호,사업자번호,대표자,설립일자,주소,주요제품,기업규모,주주정보 / 지원일,지원금액,지원조건,특이사항 / 투자/회수 현황, 재무정보(BS/PL)</td>
+            <td class="bo-src">BO-016</td>
+            <td class="remark">SPC 경유 투자 시 SPC 정보+기업정보 동시 관리 필요</td>
+          </tr>
+          <tr>
+            <td class="fo-field">투자포트폴리오 — 선박펀드 특화(선박정보·환경규제)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">선명,선종,규격,환경규제 등급 및 충족여부,운항정보,조선소 / 운항항로(Excel 업로드) / 선급 등 / 선박 보험·담보 현황</td>
+            <td class="bo-src">BO-035</td>
+            <td class="remark">선박펀드 전용 서브폼 분기 필요</td>
+          </tr>
+          <tr>
+            <td class="fo-field">일정 관리(총회,투심,보고,공문)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">각 업무기능과 연계하여 관리 — FO-024·025·026·023 화면과 크로스 링크</td>
+            <td class="bo-src">BO-019~021, BO-017</td>
+            <td class="remark">단일 캘린더 UI로 통합 노출 권장</td>
+          </tr>
+          <tr>
+            <td class="fo-field">소통(게시판)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">펀드 운용사와 공사 소통 게시판 / 전체 공지사항 등록·펀드별 안내 등록 / 확인 일자·시간 표시</td>
+            <td class="bo-src">BO-022</td>
+            <td class="remark">읽음 확인(수신확인) 타임스탬프 필드 필수</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= FO-023 ================= -->
+    <section id="fo023" class="fo-block">
+      <div class="fo-head">
+        <div>
+          <span class="fo-code">SFR-온기업-023</span>
+          <h2>[특수] 펀드 운용사 - 투자심사 보고</h2>
+        </div>
+        <div class="screen-id">ONC-SCR-023</div>
+      </div>
+      <div class="link-strip">
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-017</b> 자펀드 투자심사 관리</div>
+      </div>
+      <div class="fo-body">
+        <table class="map-table">
+          <tr><th>FO 필드</th><th></th><th>대응 BO 필드</th><th>BO 출처</th><th>비고</th></tr>
+          <tr>
+            <td class="fo-field">펀드구분 / 투자심사일 / 진행상태</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">투자포트폴리오 정보, 투자심사일, 투자심사 진행상태 확인(진행 중, 완료 등)</td>
+            <td class="bo-src">BO-017</td>
+            <td class="remark">완전 일치</td>
+          </tr>
+          <tr>
+            <td class="fo-field">투자유형(신주/구주) / 투자금액</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">투심위 정보, 투자상세(투자유형, 신주/구주, 투자금액, 취득주식수, 취득가, 지분율 등)</td>
+            <td class="bo-src">BO-017</td>
+            <td class="remark">FO는 요약 입력, BO는 상세(취득주식수·취득가·지분율) 세분화 — FO 화면에 필드 추가 필요</td>
+          </tr>
+          <tr>
+            <td class="fo-field">특이사항</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">규약준수여부, 특이사항</td>
+            <td class="bo-src">BO-017</td>
+            <td class="remark">규약준수여부(체크박스)는 FO 명세서에 별도 추가 권장</td>
+          </tr>
+          <tr>
+            <td class="fo-field">투자계약서 등록</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">첨부파일(투심보고서, 준법감시보고서, 체크리스트, 주주명부, ESG 평가보고서 등)</td>
+            <td class="bo-src">BO-017</td>
+            <td class="remark"><span class="badge gap">확인필요</span> FO는 "투자계약서" 단일 첨부, BO는 5종 문서 세트 — 다중 파일 업로드로 확장 필요</td>
+          </tr>
+          <tr>
+            <td class="fo-field">공사 의견 등 확인</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">공사 의견 등 제출 포함</td>
+            <td class="bo-src">BO-017</td>
+            <td class="remark">완전 일치</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= FO-024 ================= -->
+    <section id="fo024" class="fo-block">
+      <div class="fo-head">
+        <div>
+          <span class="fo-code">SFR-온기업-024</span>
+          <h2>[특수] 펀드 운용사 - 총회/이사회 보고</h2>
+        </div>
+        <div class="screen-id">ONC-SCR-024</div>
+      </div>
+      <div class="link-strip">
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-019</b> 자펀드 총회 관리</div>
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-038</b> 선박펀드 총회 관리(세부요건 동일)</div>
+      </div>
+      <div class="fo-body">
+        <table class="map-table">
+          <tr><th>FO 필드</th><th></th><th>대응 BO 필드</th><th>BO 출처</th><th>비고</th></tr>
+          <tr>
+            <td class="fo-field">총회종류 / 결의방법</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">펀드구분, 총회종류, 총회일자, 결의형태, 결의방법, 총회제목</td>
+            <td class="bo-src">BO-019, BO-038</td>
+            <td class="remark">완전 일치</td>
+          </tr>
+          <tr>
+            <td class="fo-field">총회 내용</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">총회내용, 첨부파일</td>
+            <td class="bo-src">BO-019</td>
+            <td class="remark">완전 일치</td>
+          </tr>
+          <tr>
+            <td class="fo-field">정관 총회 체크리스트(예산안 승인 여부 등)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">정관에 따른 총회 항목을 체크리스트 형식으로 관리</td>
+            <td class="bo-src">BO-019</td>
+            <td class="remark">체크리스트 항목은 펀드(정관)별 가변 — BO에 정관별 체크리스트 마스터 선행 필요</td>
+          </tr>
+          <tr>
+            <td class="fo-field"><span class="badge new">신규</span> 의결권 행사·결과 확인, 공사 직인 요청</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">총회 의결권 행사 및 결과 확인(필요시 공사 직인 요청 연동)</td>
+            <td class="bo-src">BO-019</td>
+            <td class="remark">FO 화면에 누락 — 직인 요청 트리거 필드 추가 권장</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= FO-025 ================= -->
+    <section id="fo025" class="fo-block">
+      <div class="fo-head">
+        <div>
+          <span class="fo-code">SFR-온기업-025</span>
+          <h2>[특수] 펀드 운용사 - 보고사항 보고</h2>
+          <div class="fo-meta">선박펀드: 용선사 재무현황·질권·담보비율 등 모니터링 포함</div>
+        </div>
+        <div class="screen-id">ONC-SCR-025</div>
+      </div>
+      <div class="link-strip">
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-020</b> 자펀드 보고 관리</div>
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-039</b> 선박펀드 보고 관리</div>
+      </div>
+      <div class="fo-body">
+        <table class="map-table">
+          <tr><th>FO 필드</th><th></th><th>대응 BO 필드</th><th>BO 출처</th><th>비고</th></tr>
+          <tr>
+            <td class="fo-field">보고구분(정기/수시/기타)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">자펀드 정기 보고 관리 / 수시 보고 관리 / 기타 보고 관리</td>
+            <td class="bo-src">BO-020, BO-039</td>
+            <td class="remark">완전 일치</td>
+          </tr>
+          <tr>
+            <td class="fo-field">기준분기 / 보고대상 / 보고제목 / 보고내용</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">펀드구분, 보고일자, 기준분기, 보고대상, 보고제목, 보고내용, 첨부파일</td>
+            <td class="bo-src">BO-020</td>
+            <td class="remark">완전 일치</td>
+          </tr>
+          <tr>
+            <td class="fo-field">선박펀드 모니터링(용선사 재무현황, 담보비율, 보험 등)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">경영이행약정에 따른 주요사항 모니터링 보고(용선사 재무현황, 선박 담보비율 현황, 주간/월간 해운시황 등) 체크리스트 형식 관리 — 계량항목은 통계목적 별도 관리</td>
+            <td class="bo-src">BO-039</td>
+            <td class="remark">[SFR-온기업-025] 원문에서 직접 역참조됨(BO→FO 명시 연계)</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= FO-026 ================= -->
+    <section id="fo026" class="fo-block">
+      <div class="fo-head">
+        <div>
+          <span class="fo-code">SFR-온기업-026</span>
+          <h2>[특수] 펀드 운용사 - 공문 보고</h2>
+        </div>
+        <div class="screen-id">ONC-SCR-026</div>
+      </div>
+      <div class="link-strip">
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-021</b> 자펀드 공문 관리</div>
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-040</b> 선박펀드 공문 관리</div>
+      </div>
+      <div class="fo-body">
+        <table class="map-table">
+          <tr><th>FO 필드</th><th></th><th>대응 BO 필드</th><th>BO 출처</th><th>비고</th></tr>
+          <tr>
+            <td class="fo-field">펀드구분 / 공문종류(수·발신) / 공문유형(보고,총회,기타) / 공문일자 / 공문제목 / 공문내용 / 처리현황</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">펀드구분, 공문종류(수/발신), 공문유형(보고, 총회, 기타 등), 공문일자, 공문제목, 공문내용, 처리현황, 첨부파일</td>
+            <td class="bo-src">BO-021, BO-040</td>
+            <td class="remark">필드명 완전 일치(1:1)</td>
+          </tr>
+          <tr>
+            <td class="fo-field">특정 업무 연계(출자배분·보고·총회 등)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">공문이 특정 업무와 관련될 경우 해당 업무와 연계 관리</td>
+            <td class="bo-src">BO-021</td>
+            <td class="remark">FO-023~025·027과 상호 참조 링크(공문번호) 필요</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= FO-027 ================= -->
+    <section id="fo027" class="fo-block">
+      <div class="fo-head">
+        <div>
+          <span class="fo-code">SFR-온기업-027</span>
+          <h2>[특수] 펀드 운용사 - 출자금 납입요청 등</h2>
+        </div>
+        <div class="screen-id">ONC-SCR-027</div>
+      </div>
+      <div class="link-strip">
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-015</b> 자펀드 운용현황(출자/배분) 관리</div>
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-032</b> 선박펀드 자금집행(인출선행조건)</div>
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-034</b> 선박펀드 운용현황(출자/배분) 관리</div>
+      </div>
+      <div class="fo-body">
+        <table class="map-table">
+          <tr><th>FO 필드</th><th></th><th>대응 BO 필드</th><th>BO 출처</th><th>비고</th></tr>
+          <tr>
+            <td class="fo-field">출자금 납입요청 — 차수,일자,지정납입일,금액(총금액/출자자별),좌수,납입계좌</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">모펀드 출자/배분 현황(차수,일자,금액(총금액,출자자별 금액)), 출자약정액·출자금액·배분금액 관리, 출자금 입금 등 운용지시서 생성 연동</td>
+            <td class="bo-src">BO-015, BO-034</td>
+            <td class="remark">필드 완전 일치</td>
+          </tr>
+          <tr>
+            <td class="fo-field">출자자별 금액 <span class="badge calc">자동계산</span></td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">출자자별 금액은 지분비율로 1차 자동계산(수정 가능, Excel 교차검증 파일(수식 포함) 출력 기능 추가)</td>
+            <td class="bo-src">BO-015</td>
+            <td class="remark">"필요시 운용사가 수정"이라는 FO 문구와 BO의 "1차 자동계산(수정가능)"이 정확히 대응</td>
+          </tr>
+          <tr>
+            <td class="fo-field">인출선행조건 확인 <span class="badge gap">확인필요</span></td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">인출선행조건 충족여부 확인(회사결의서류, 외국환신고, 보험양도 등 체크리스트 기반)</td>
+            <td class="bo-src">BO-032(선박펀드 한정)</td>
+            <td class="remark">FO 화면 명세에 조건 체크 UI가 없음 — 선박펀드 납입요청 시 추가 필요</td>
+          </tr>
+          <tr>
+            <td class="fo-field">분배금 지급통보 — 사전 알람(팝업)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">회수 당일 해당 선박펀드 사전 알람(통지, 팝업) 기능</td>
+            <td class="bo-src">BO-034</td>
+            <td class="remark">완전 일치(선박펀드 전용)</td>
+          </tr>
+          <tr>
+            <td class="fo-field">출자배분요청계획 등록 — 연도별/월별/주차별 요청예정일,금액,비고</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">모펀드 자금출납계획 관리(연도별/월별/주차별 요청예정일, 금액, 비고) — 캐스케이딩 방식 집계</td>
+            <td class="bo-src">BO-015, BO-034</td>
+            <td class="remark">필드 완전 일치. 캐스케이딩 집계 로직은 BO에서만 수행(FO는 조회)</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= FO-028 ================= -->
+    <section id="fo028" class="fo-block">
+      <div class="fo-head">
+        <div>
+          <span class="fo-code">SFR-온기업-028</span>
+          <h2>[특수] 펀드 운용사 - 투자실적 검증 등 보고</h2>
+        </div>
+        <div class="screen-id">ONC-SCR-028</div>
+      </div>
+      <div class="link-strip">
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-022</b> 자펀드 투자실적 검증 등</div>
+      </div>
+      <div class="fo-body">
+        <table class="map-table">
+          <tr><th>FO 필드</th><th></th><th>대응 BO 필드</th><th>BO 출처</th><th>비고</th></tr>
+          <tr>
+            <td class="fo-field">펀드 실물검증(검증일,검증주기,일치여부,기타의견)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">공사-자펀드 운용사-수탁기관 정보 대사(일치/불일치 및 기타 의견 표시), 검증주기(일간/주간/월간)별 이력 조회, 수탁실물자료 검증 적부 관리</td>
+            <td class="bo-src">BO-022</td>
+            <td class="remark">3자(공사·운용사·수탁기관) 대사 구조 — FO 화면에 수탁기관 값 컬럼 추가 검토</td>
+          </tr>
+          <tr>
+            <td class="fo-field">펀드 평가(Valuation) 결과 보고</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">자펀드 투자자산 평가(Valuation)/분석 조회 등</td>
+            <td class="bo-src">BO-022</td>
+            <td class="remark">완전 일치</td>
+          </tr>
+          <tr>
+            <td class="fo-field"><span class="badge new">신규</span> 컴플라이언스(준법감시)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">준법감시위원회, 준법감시보고서, 사전준법감시 체크리스트, 위험관리 체크리스트</td>
+            <td class="bo-src">BO-022</td>
+            <td class="remark">FO-028 화면에 컴플라이언스 탭 없음 — BO 요건에는 존재, 화면설계서에 반영 필요</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= FO-029 ================= -->
+    <section id="fo029" class="fo-block">
+      <div class="fo-head">
+        <div>
+          <span class="fo-code">SFR-온기업-029</span>
+          <h2>[특수] 펀드 운용사 - 선박펀드 기타 보고</h2>
+          <div class="fo-meta">해운사 상담 / 선박투자회사 설립 / 정기수리검사 / 만기·조기상환 / 채무불이행</div>
+        </div>
+        <div class="screen-id">ONC-SCR-029</div>
+      </div>
+      <div class="link-strip">
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-024</b> 상담 관리</div>
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-028</b> 계약체결 사전준비(선박투자회사 설립)</div>
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-043</b> 선박 현상검사</div>
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-037</b> 상환/종결 관리</div>
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-041</b> 채무불이행 관리</div>
+      </div>
+      <div class="fo-body">
+        <table class="map-table">
+          <tr><th>FO 카드</th><th></th><th>대응 BO 필드</th><th>BO 출처</th><th>비고</th></tr>
+          <tr>
+            <td class="fo-field">해운사 상담 관리(상담내용 조회·등록)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">기업고객통합정보 현황 조회, 상담정보 조회·등록, 상담이력 조회, 담당자 배정 — 공사·해운사 상담 이력 공동 조회</td>
+            <td class="bo-src">BO-024</td>
+            <td class="remark">[SFR-금융지원-003] 참고 명시</td>
+          </tr>
+          <tr>
+            <td class="fo-field">선박투자회사 등 설립 보고(해외 SPC 포함)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">기본합의서 체결 관리(선박가격,투자금액,대출금리 등) / 선박투자회사·해외SPC 설립 현황 조회·등록, 설립 진행경과 관리(캠코선박운용은 직접, 해외SPC는 법률자문사 위탁)</td>
+            <td class="bo-src">BO-028</td>
+            <td class="remark">설립 흐름 네비게이션 UI 필요(BO 원문 명시)</td>
+          </tr>
+          <tr>
+            <td class="fo-field">정기수리검사 일정 관리</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">선박 현상검사 대상·일정 조회·등록, 연간 국외출장계획 관리, 사전 알람(D-30일 전 팝업), 국외출장 승인·결과보고, 이력관리</td>
+            <td class="bo-src">BO-043</td>
+            <td class="remark">FO 화면은 "일정 등록/전송"만 명시 — BO는 국외출장 결재연동까지 포함, 화면 확장 필요</td>
+          </tr>
+          <tr>
+            <td class="fo-field">만기/조기상환 관리</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">만기상환·조기상환 현황 조회·등록, 해운사 상담 연동, 펀드 자금일정 조회, 승인 및 운용사 통지, 종결 보고</td>
+            <td class="bo-src">BO-037</td>
+            <td class="remark">완전 일치</td>
+          </tr>
+          <tr>
+            <td class="fo-field">채무불이행 관리(위반사유 접수·점검)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">위반사유 현황 조회·등록(펀드별 계약조건에 따른 채무불이행 사유), 용선사 위반사유 통지, 채권자 권리행사 등 후속조치, 소송 관리</td>
+            <td class="bo-src">BO-041</td>
+            <td class="remark">소송 관리([SFR-금융지원-024])는 FO 화면에 없음 — 발생 시 확장 필요</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= FO-030 ================= -->
+    <section id="fo030" class="fo-block">
+      <div class="fo-head">
+        <div>
+          <span class="fo-code">SFR-온기업-030</span>
+          <h2>[특수] 펀드 운용사 - 온라인 출자사업 신청</h2>
+          <div class="fo-meta">온기업 가입 투자자(LP) 회원도 이용 가능(권한 설정)</div>
+        </div>
+        <div class="screen-id">ONC-SCR-030</div>
+      </div>
+      <div class="link-strip">
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-013</b> 자펀드 출자사업 관리</div>
+      </div>
+      <div class="fo-body">
+        <div class="desc">BO-013 원문: "출자사업 온라인 신청 접수창구(온기업 내) 구축" — FO-030이 그 접수창구 화면 자체입니다. LP측은 BO-023에서 "펀드투자(LP) 업무 = 펀드운용(GP) 자펀드 관리와 동일, 단 정보차단벽 필요"로 재인용됩니다.</div>
+        <table class="map-table">
+          <tr><th>FO 필드</th><th></th><th>대응 BO 필드</th><th>BO 출처</th><th>비고</th></tr>
+          <tr>
+            <td class="fo-field">출자사업 공고 조회(제안서 접수/마감/심사일)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">공고 관리 — 대상 모펀드, 공고일자, 공고제목, 공고문, 공고이력, 진행현황 / 제안서 접수일, 접수 마감일, 심사일 등</td>
+            <td class="bo-src">BO-013</td>
+            <td class="remark">완전 일치</td>
+          </tr>
+          <tr>
+            <td class="fo-field">신청 주요내용 입력 / 제안서 등록·변경</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">출자사업 신청·정식제안서 접수 현황 조회·등록 / 출자 신청 주요내용 입력 및 제안서 등 관련서류 등록</td>
+            <td class="bo-src">BO-013</td>
+            <td class="remark">완전 일치</td>
+          </tr>
+          <tr>
+            <td class="fo-field">신청서 접수 및 출력</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">제안서 접수결과 보고</td>
+            <td class="bo-src">BO-013</td>
+            <td class="remark">완전 일치</td>
+          </tr>
+          <tr>
+            <td class="fo-field"><span class="badge new">신규</span> 심사 진행현황·결과 조회</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">출자사업 심사 관리(서류평가,접수심사,현장실사,외부평가,리스크심사,투자심의 등 단계별) / 선정 결과보고·LOC 발급</td>
+            <td class="bo-src">BO-013</td>
+            <td class="remark">FO 화면에 심사 단계별 진행 상태 노출 UI 필요(현재 wireframe엔 없음)</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= FO-031 ================= -->
+    <section id="fo031" class="fo-block">
+      <div class="fo-head">
+        <div>
+          <span class="fo-code">SFR-온기업-031</span>
+          <h2>[특수] 수탁기관 - 운용지시서 관리</h2>
+        </div>
+        <div class="screen-id">ONC-SCR-031</div>
+      </div>
+      <div class="link-strip">
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-010</b> 모펀드 운용-운용지시 관리</div>
+      </div>
+      <div class="fo-body">
+        <table class="map-table">
+          <tr><th>FO 필드</th><th></th><th>대응 BO 필드</th><th>BO 출처</th><th>비고</th></tr>
+          <tr>
+            <td class="fo-field">펀드구분, 운용지시종류, 운용지시일, 제목, 진행현황</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">펀드구분, 수탁기관명, 운용지시 종류, 운용지시 일자, 운용지시 제목, 운용지시 내용, 진행현황, 관련 모펀드 계좌, 첨부파일</td>
+            <td class="bo-src">BO-010</td>
+            <td class="remark">필드 완전 일치(BO에는 수탁기관명·계좌 필드 추가)</td>
+          </tr>
+          <tr>
+            <td class="fo-field"><span class="badge new">신규</span> 운용지시서 생성(표준 양식)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">모펀드 운용지시서 생성(표준 양식) — 출자/배분/투자/회수/투자자산변동/환전/계좌간이체/일반자금운용/출자증서관리/기타 운용지시 유형</td>
+            <td class="bo-src">BO-010</td>
+            <td class="remark">양식 자체는 BO-010 마스터 — FO는 표시·다운로드만 담당</td>
+          </tr>
+          <tr>
+            <td class="fo-field">운용지시 결과 보고 및 전송</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">운용지시 처리현황·결과 관리(수탁기관 보고시스템과 연동하여 처리결과 수신 및 확인)</td>
+            <td class="bo-src">BO-010</td>
+            <td class="remark">완전 일치</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= FO-032 ================= -->
+    <section id="fo032" class="fo-block">
+      <div class="fo-head">
+        <div>
+          <span class="fo-code">SFR-온기업-032</span>
+          <h2>[특수] 수탁기관 - 정보대사 관리 등</h2>
+        </div>
+        <div class="screen-id">ONC-SCR-032</div>
+      </div>
+      <div class="link-strip">
+        <div class="link-chip"><span class="dot"></span><b>SFR-펀드관리-010</b> 수탁기관 정보대사 관리(하위 항목)</div>
+      </div>
+      <div class="fo-body">
+        <div class="desc">BO-010은 하나의 요건 안에 "모펀드 운용지시 관리"와 "수탁기관 정보대사 관리" 두 서브블록을 함께 담고 있습니다. FO-031과 FO-032는 이 하나의 BO 요건을 두 화면으로 분리한 형태입니다.</div>
+        <table class="map-table">
+          <tr><th>FO 필드</th><th></th><th>대응 BO 필드</th><th>BO 출처</th><th>비고</th></tr>
+          <tr>
+            <td class="fo-field">계좌 잔고 / 보유 자산내역 / 입출금 내역 대사표</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">수탁기관 정보대사 — 공사 시스템 관리 정보와 수탁기관 관리 정보대사(계좌, 보유 자산내역, 입출금 내역, 잔고 등)</td>
+            <td class="bo-src">BO-010</td>
+            <td class="remark">필드 완전 일치</td>
+          </tr>
+          <tr>
+            <td class="fo-field">일치여부 표시(일치/불일치)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">수탁기관 보고시스템과 연동하여 확인하고 일치/불일치 및 기타 의견 표시</td>
+            <td class="bo-src">BO-010</td>
+            <td class="remark">완전 일치</td>
+          </tr>
+          <tr>
+            <td class="fo-field"><span class="badge new">신규</span> 대사 주기 이력(일간/주간/월간)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field">대사주기(예: 일간, 주간, 월간)별 이력 관리</td>
+            <td class="bo-src">BO-010</td>
+            <td class="remark">FO 화면에 주기 선택 필터 없음 — 이력 조회 화면에 추가 권장</td>
+          </tr>
+          <tr>
+            <td class="fo-field">소통 관리(수탁기관 ↔ 공사 게시판)</td>
+            <td class="arrow-cell">↔</td>
+            <td class="bo-field"><span class="badge gap">확인필요</span> BO-010 원문에 게시판 기능 명시 없음</td>
+            <td class="bo-src">-</td>
+            <td class="remark">BO-022(운용사 소통) 패턴을 수탁기관용으로 별도 신설 필요 여부 확인 요망</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      RFP 이미지 원문(IMG_9028~9036, IMG_9037~9070) 전수 대조 기반 · 캠코 온기업(OnCorp) 화면설계 지원 자료 · 발주처 최종 확인 필요
+    </footer>
+
+  </main>
+</div>
+
+</body>
+</html>
